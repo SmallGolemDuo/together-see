@@ -21,7 +21,6 @@ public class UserService {
   public UserFindByIdResponse findById(Long id) {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
-
     return UserFindByIdResponse.from(user);
   }
 
