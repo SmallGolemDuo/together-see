@@ -12,16 +12,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
-    return UserCreateResponse.from(userRepository.save(userCreateRequest.toEntity()));
-  }
+    public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
+        return UserCreateResponse.from(userRepository.save(userCreateRequest.toEntity()));
+    }
 
-  public UserFindByIdResponse findById(Long id) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
-    return UserFindByIdResponse.from(user);
-  }
+    public UserFindByIdResponse findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+        return UserFindByIdResponse.from(user);
+    }
+
+    public boolean deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+        userRepository.delete(user);
+        return true;
+    }
 
 }
