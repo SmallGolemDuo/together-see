@@ -19,14 +19,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String username;
-    private String email;
-    private String password;
-    private String birth;
-    private String phoneNumber;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String username;
+  private String email;
+  private String password;
+  private String birth;
+  private String phoneNumber;
 
     public void modifyUserInfo(String password, String phoneNumber) {
         this.password = password;

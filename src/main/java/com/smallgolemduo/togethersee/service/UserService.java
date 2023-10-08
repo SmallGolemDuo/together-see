@@ -9,6 +9,7 @@ import com.smallgolemduo.togethersee.entity.User;
 import com.smallgolemduo.togethersee.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class UserService {
         return UserFindByIdResponse.from(user);
     }
 
+    @Transactional
     public UserUpdateResponse updateUser(Long id, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
