@@ -8,7 +8,6 @@ public class TogetherSeeApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(TogetherSeeApplication.class, args);
-    System.out.println("test");
   }
 
 }
