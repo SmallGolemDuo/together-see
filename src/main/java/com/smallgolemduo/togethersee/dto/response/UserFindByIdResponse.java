@@ -14,20 +14,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserFindByIdResponse {
 
-  private String username;
-  private String email;
-  private String password;
-  private String birth;
-  private String phoneNumber;
+    private String username;
+    private String email;
+    private String password;
+    private String birth;
+    private String phoneNumber;
 
-  public static UserFindByIdResponse from(User user) {
-    return UserFindByIdResponse.builder()
-        .username(user.getUsername())
-        .email(user.getEmail())
-        .password(user.getPassword())
-        .birth(user.getBirth())
-        .phoneNumber(user.getPhoneNumber())
-        .build();
-  }
+    public static UserFindByIdResponse from(User user) {
+        return UserFindByIdResponse.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .birth(user.getBirth())
+                .phoneNumber(user.getPhoneNumber())
+                .build();
+    }
 
 }

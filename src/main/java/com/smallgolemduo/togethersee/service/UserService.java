@@ -24,6 +24,7 @@ public class UserService {
         return UserCreateResponse.from(userRepository.save(userCreateRequest.toEntity()));
     }
 
+    @Transactional(readOnly = true)
     public UserFindByIdResponse findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
