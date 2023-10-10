@@ -29,8 +29,8 @@ public class UserController {
         return userService.createUser(userCreateRequest);
     }
 
-    @GetMapping("/api/user/{id}")
-    public UserFindByIdResponse findByIdUser(@PathVariable Long id) {
+    @GetMapping("/api/user/{userId}")
+    public UserFindByIdResponse findByIdUser(@PathVariable("userId") Long id) {
         return userService.findById(id);
     }
 
