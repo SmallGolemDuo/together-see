@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +27,10 @@ public class User {
   private String password;
   private String birth;
   private String phoneNumber;
+
+    public void modifyUserInfo(String password, String phoneNumber) {
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+    }
 
 }
