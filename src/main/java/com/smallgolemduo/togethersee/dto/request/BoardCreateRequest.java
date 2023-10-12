@@ -1,6 +1,7 @@
 package com.smallgolemduo.togethersee.dto.request;
 
 import com.smallgolemduo.togethersee.entity.Board;
+import com.smallgolemduo.togethersee.entity.User;
 import com.smallgolemduo.togethersee.entity.enums.Genre;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class BoardCreateRequest {
     private Long likes;
     private Long dislikes;
     private Genre genre;
+    private User user;
 
     public Board toEntity() {
         return Board.builder()
@@ -26,6 +28,7 @@ public class BoardCreateRequest {
                 .likes(this.likes)
                 .dislikes(this.dislikes)
                 .genre(this.genre)
+                .user(this.user)
                 .build();
     }
 
