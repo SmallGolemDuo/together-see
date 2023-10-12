@@ -21,9 +21,10 @@ public class Board {
     private String author;
     private Long likes;
     private Long dislikes;
+    @Enumerated(EnumType.STRING)
     private Genre genre;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user_id;
+    private User user;
 
 }
