@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smallgolemduo.togethersee.dto.response.BoardFindAllResponse;
+
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/boards")
 @RequiredArgsConstructor
@@ -26,6 +30,11 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public BoardFindByIdResponse findById(@PathVariable("boardId") Long id) {
         return boardService.findById(id);
+    }
+
+    @GetMapping
+    public List<BoardFindAllResponse> findAll() {
+        return boardService.findAll();
     }
 
 }
