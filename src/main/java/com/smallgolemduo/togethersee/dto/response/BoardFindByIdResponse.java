@@ -28,4 +28,5 @@ public class BoardFindByIdResponse {
                 .genre(board.getGenre())
                 .build();
     }
+
 }

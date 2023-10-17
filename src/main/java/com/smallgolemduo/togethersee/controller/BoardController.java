@@ -1,11 +1,11 @@
 package com.smallgolemduo.togethersee.controller;
 
+import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +23,8 @@ public class BoardController {
         return boardService.createBoard(boardCreateRequest);
     }
 
-    @GetMapping("/{userId}")
-    public BoardFindByIdResponse findById(@PathVariable("userId") Long id) {
+    @GetMapping("/{boardId}")
+    public BoardFindByIdResponse findById(@PathVariable("boardId") Long id) {
         return boardService.findById(id);
     }
 
