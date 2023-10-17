@@ -18,6 +18,8 @@ import java.util.List;
 import com.smallgolemduo.togethersee.dto.request.BoardUpdateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardUpdateResponse;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/api/boards")
 @RequiredArgsConstructor
@@ -40,9 +42,9 @@ public class BoardController {
         return boardService.findAll();
     }
 
-    @PutMapping("{userId}")
-    public BoardUpdateResponse updateBoard(@PathVariable("userId") Long id,
-                                           @RequestBody BoardUpdateRequest boardUpdateRequest) {
+    @PutMapping("{boardId}")
+    public BoardUpdateResponse update(@PathVariable("boardId") Long id,
+                                      @RequestBody @Valid BoardUpdateRequest boardUpdateRequest) {
         return boardService.updateBoard(id, boardUpdateRequest);
     }
 
