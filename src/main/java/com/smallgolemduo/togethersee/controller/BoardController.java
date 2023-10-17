@@ -5,6 +5,11 @@ import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/boards")
@@ -16,6 +21,11 @@ public class BoardController {
     @PostMapping
     public BoardCreateResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest) {
         return boardService.createBoard(boardCreateRequest);
+    }
+
+    @GetMapping("/{userId}")
+    public BoardFindByIdResponse findById(@PathVariable("userId") Long id) {
+        return boardService.findById(id);
     }
 
 }
