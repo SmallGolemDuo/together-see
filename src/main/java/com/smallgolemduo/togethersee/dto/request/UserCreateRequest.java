@@ -14,20 +14,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserCreateRequest {
 
-  private String username;
-  private String email;
-  private String password;
-  private String birth;
-  private String phoneNumber;
+    private String username;
+    private String email;
+    private String password;
+    private String birth;
+    private String phoneNumber;
 
-  public User toEntity() {
-    return User.builder()
-        .username(this.username)
-        .email(this.email)
-        .password(this.password)
-        .birth(this.birth)
-        .phoneNumber(this.phoneNumber)
-        .build();
-  }
+    public User toEntity() {
+        return User.builder()
+                .username(this.username)
+                .email(this.email)
+                .password(this.password)
+                .birth(this.birth)
+                .phoneNumber(this.phoneNumber)
+                .build();
+    }
 
 }
