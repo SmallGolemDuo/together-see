@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class BoardCreateResponse {
 
+    private Long id;
     private String title;
     private String content;
     private String author;
@@ -20,6 +21,7 @@ public class BoardCreateResponse {
 
     public static BoardCreateResponse from(Board board) {
         return BoardCreateResponse.builder()
+                .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .author(board.getAuthor())
