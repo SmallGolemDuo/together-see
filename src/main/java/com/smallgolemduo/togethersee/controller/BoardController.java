@@ -7,6 +7,7 @@ import com.smallgolemduo.togethersee.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,11 @@ public class BoardController {
     public BoardUpdateResponse update(@PathVariable("boardId") Long id,
                                       @RequestBody @Valid BoardUpdateRequest boardUpdateRequest) {
         return boardService.updateBoard(id, boardUpdateRequest);
+    }
+
+    @DeleteMapping("/{boardId}")
+    public boolean delete(@PathVariable("boardId") Long id) {
+        return boardService.delete(id);
     }
 
 }
