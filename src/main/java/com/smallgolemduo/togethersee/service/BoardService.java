@@ -48,4 +48,12 @@ public class BoardService {
         return BoardUpdateResponse.from(boardRepository.save(board));
     }
 
+    @Transactional
+    public boolean delete(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
+        boardRepository.delete(board);
+        return true;
+    }
+
 }
