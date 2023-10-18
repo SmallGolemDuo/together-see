@@ -21,8 +21,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardCreateResponse createBoard(BoardCreateRequest boardCreateRequest) {
-        return BoardCreateResponse.from(boardRepository.save(boardCreateRequest.toEntity()));
+    public BoardCreateResponse create(BoardCreateRequest boardCreateRequest) {
+        Board entity = boardCreateRequest.toEntity();
+        return BoardCreateResponse.from(boardRepository.save(entity));
     }
 
     @Transactional(readOnly = true)

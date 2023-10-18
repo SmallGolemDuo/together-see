@@ -21,6 +21,8 @@ import com.smallgolemduo.togethersee.dto.response.BoardUpdateResponse;
 
 import javax.validation.Valid;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/api/boards")
 @RequiredArgsConstructor
@@ -29,8 +31,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public BoardCreateResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest) {
-        return boardService.createBoard(boardCreateRequest);
+    public BoardCreateResponse create(@RequestBody @Valid BoardCreateRequest boardCreateRequest) {
+        return boardService.create(boardCreateRequest);
     }
 
     @GetMapping("/{boardId}")
