@@ -16,3 +16,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+  # swagger setting
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
