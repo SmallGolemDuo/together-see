@@ -3,6 +3,7 @@ package com.smallgolemduo.togethersee.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
+import com.smallgolemduo.togethersee.dto.response.BoardFindAllResponse;
 import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
 import com.smallgolemduo.togethersee.entity.enums.Genre;
 import com.smallgolemduo.togethersee.service.BoardService;
@@ -18,6 +19,9 @@ import static com.smallgolemduo.togethersee.entity.enums.Genre.ACTION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,6 +82,34 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.likes").value(2L))
                 .andExpect(jsonPath("$.dislikes").value(0L))
                 .andExpect(jsonPath("$.genre").value("SF_FANTASY"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 전체 조회")
+    void findAll() throws Exception {
+        // given
+        List<BoardFindAllResponse> boardFindAllResponses = List.of(
+                new BoardFindAllResponse("안녕", "최성욱입니다.", "최성욱", 0L, 1L, Genre.ETC),
+                new BoardFindAllResponse("출첵", "출석체크할게요", "박상민", 10L, 1L, Genre.ETC));
+        given(boardService.findAll()).willReturn(boardFindAllResponses);
+        // when & then
+        mockMvc.perform(get("/api/boards"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(boardFindAllResponses.size()))
+                .andExpect(jsonPath("$[0].title").value(boardFindAllResponses.get(0).getTitle()))
+                .andExpect(jsonPath("$[0].content").value(boardFindAllResponses.get(0).getContent()))
+                .andExpect(jsonPath("$[0].author").value(boardFindAllResponses.get(0).getAuthor()))
+                .andExpect(jsonPath("$[0].likes").value(boardFindAllResponses.get(0).getLikes()))
+                .andExpect(jsonPath("$[0].dislikes").value(boardFindAllResponses.get(0).getDislikes()))
+                .andExpect(jsonPath("$[0].genre").value(boardFindAllResponses.get(0).getGenre().toString()))
+                .andExpect(jsonPath("$[1].title").value(boardFindAllResponses.get(1).getTitle()))
+                .andExpect(jsonPath("$[1].content").value(boardFindAllResponses.get(1).getContent()))
+                .andExpect(jsonPath("$[1].author").value(boardFindAllResponses.get(1).getAuthor()))
+                .andExpect(jsonPath("$[1].likes").value(boardFindAllResponses.get(1).getLikes()))
+                .andExpect(jsonPath("$[1].dislikes").value(boardFindAllResponses.get(1).getDislikes()))
+                .andExpect(jsonPath("$[1].genre").value(boardFindAllResponses.get(1).getGenre().toString()))
                 .andDo(print());
     }
 
