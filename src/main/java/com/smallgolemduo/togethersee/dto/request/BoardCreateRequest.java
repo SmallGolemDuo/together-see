@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class BoardCreateRequest {
 
