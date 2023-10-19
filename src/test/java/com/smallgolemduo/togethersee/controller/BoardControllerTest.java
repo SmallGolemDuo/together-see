@@ -3,6 +3,8 @@ package com.smallgolemduo.togethersee.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
+import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
+import com.smallgolemduo.togethersee.entity.enums.Genre;
 import com.smallgolemduo.togethersee.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import static com.smallgolemduo.togethersee.entity.enums.Genre.ACTION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,6 +57,27 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.likes").value(365L))
                 .andExpect(jsonPath("$.dislikes").value(1L))
                 .andExpect(jsonPath("$.genre").value("ACTION"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 조회")
+    void findById() throws Exception {
+        // given
+        Long boardId = 1L;
+        BoardFindByIdResponse boardFindByIdResponse = new BoardFindByIdResponse(
+                "안녕하세요", "최성욱입니다.", "최성욱", 2L, 0L, Genre.SF_FANTASY);
+        given(boardService.findById(boardId)).willReturn(boardFindByIdResponse);
+
+        // when & then
+        mockMvc.perform(get("/api/boards/{id}", boardId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("안녕하세요"))
+                .andExpect(jsonPath("$.content").value("최성욱입니다."))
+                .andExpect(jsonPath("$.author").value("최성욱"))
+                .andExpect(jsonPath("$.likes").value(2L))
+                .andExpect(jsonPath("$.dislikes").value(0L))
+                .andExpect(jsonPath("$.genre").value("SF_FANTASY"))
                 .andDo(print());
     }
 
