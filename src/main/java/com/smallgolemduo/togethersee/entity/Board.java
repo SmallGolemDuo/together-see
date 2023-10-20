@@ -25,10 +25,18 @@ public class Board {
     private Long userId;
 
     public void modifyBoardInfo(String title, String content, String author, Genre genre) {
-        this.title = title;
-        this.content = content;
-        this.author = author;
-        this.genre = genre;
+        if (title != null) {
+            this.title = title;
+        }
+        if (content != null) {
+            this.content = content;
+        }
+        if (author != null) {
+            this.author = author;
+        }
+        if (genre != null) {
+            this.genre = genre;
+        }
     }
 
 }
