@@ -7,8 +7,9 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class BoardUpdateResponse {
+public class UpdateBoardResponse {
 
+    private Long id;
     private String title;
     private String content;
     private String author;
@@ -16,8 +17,9 @@ public class BoardUpdateResponse {
     private Long dislikes;
     private Genre genre;
 
-    public static BoardUpdateResponse from(Board board) {
-        return BoardUpdateResponse.builder()
+    public static UpdateBoardResponse from(Board board) {
+        return UpdateBoardResponse.builder()
+                .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .author(board.getAuthor())
