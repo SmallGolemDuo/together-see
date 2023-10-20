@@ -1,8 +1,8 @@
 package com.smallgolemduo.togethersee.service;
 
+import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
-import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.entity.enums.Genre;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +17,8 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest {
@@ -65,6 +67,21 @@ class BoardServiceTest {
 
         // then
         assertThat(boardResponse).usingRecursiveComparison().isEqualTo(expectedUpdateBoardResponse);
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void deleted() {
+        // given
+        Long boardId = 4L;
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(Board.builder().build()));
+        doNothing().when(boardRepository).delete(any());
+
+        // when
+        boolean isDelete = boardService.deleted(boardId);
+
+        // then
+        assertThat(isDelete).isTrue();
     }
 
 }
