@@ -1,6 +1,6 @@
 package com.smallgolemduo.togethersee.service;
 
-import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
@@ -26,10 +26,10 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardFindByIdResponse findById(Long id) {
+    public FindByIdBoardResponse findById(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
-        return BoardFindByIdResponse.from(board);
+        return FindByIdBoardResponse.from(board);
     }
 
     @Transactional(readOnly = true)

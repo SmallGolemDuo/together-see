@@ -1,6 +1,6 @@
 package com.smallgolemduo.togethersee.controller;
 
-import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
@@ -34,7 +34,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public BoardFindByIdResponse findById(@PathVariable("boardId") Long id) {
+    public FindByIdBoardResponse findById(@PathVariable("boardId") Long id) {
         return boardService.findById(id);
     }
 

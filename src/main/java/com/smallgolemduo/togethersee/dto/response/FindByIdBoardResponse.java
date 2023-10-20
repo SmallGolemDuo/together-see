@@ -7,8 +7,9 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class BoardFindByIdResponse {
+public class FindByIdBoardResponse {
 
+    private Long id;
     private String title;
     private String content;
     private String author;
@@ -16,8 +17,9 @@ public class BoardFindByIdResponse {
     private Long dislikes;
     private Genre genre;
 
-    public static BoardFindByIdResponse from(Board board) {
-        return BoardFindByIdResponse.builder()
+    public static FindByIdBoardResponse from(Board board) {
+        return FindByIdBoardResponse.builder()
+                .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .author(board.getAuthor())
