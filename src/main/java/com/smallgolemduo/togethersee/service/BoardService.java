@@ -35,8 +35,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardFindAllResponse> findAll() {
-        List<Board> users = boardRepository.findAll();
-        return BoardFindAllResponse.fromList(users);
+        return BoardFindAllResponse.fromList(boardRepository.findAll());
     }
 
     @Transactional
