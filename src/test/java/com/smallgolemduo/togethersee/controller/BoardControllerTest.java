@@ -30,6 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WebMvcTest(controllers = BoardController.class)
 class BoardControllerTest {
 
@@ -250,6 +257,19 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.dislikes").value(2L))
                 .andExpect(jsonPath("$.genre").value("SF_FANTASY"))
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void deleted() throws Exception {
+        // given
+        Long boardId = 3L;
+
+        // when & then
+        mockMvc.perform(delete("/api/boards/{boardId}", boardId))
+                .andExpect(status().isOk())
+                .andDo(print());
+        verify(boardService).deleted(boardId);
     }
 
 }

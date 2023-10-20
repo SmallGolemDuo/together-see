@@ -19,6 +19,8 @@ import java.util.List;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/api/boards")
 @RequiredArgsConstructor
@@ -48,8 +50,8 @@ public class BoardController {
     }
 
     @DeleteMapping("/{boardId}")
-    public boolean delete(@PathVariable("boardId") Long id) {
-        return boardService.delete(id);
+    public boolean deleted(@PathVariable("boardId") Long id) {
+        return boardService.deleted(id);
     }
 
 }
