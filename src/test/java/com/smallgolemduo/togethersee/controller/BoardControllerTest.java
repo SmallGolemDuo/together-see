@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
 import com.smallgolemduo.togethersee.dto.response.BoardFindAllResponse;
-import com.smallgolemduo.togethersee.dto.response.BoardFindByIdResponse;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.entity.enums.Genre;
 import com.smallgolemduo.togethersee.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
@@ -30,12 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import org.springframework.test.web.servlet.MockMvc;
-
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = BoardController.class)
 class BoardControllerTest {
@@ -80,9 +76,9 @@ class BoardControllerTest {
     void findById() throws Exception {
         // given
         Long boardId = 1L;
-        BoardFindByIdResponse boardFindByIdResponse = new BoardFindByIdResponse(
-                "안녕하세요", "최성욱입니다.", "최성욱", 2L, 0L, Genre.SF_FANTASY);
-        given(boardService.findById(boardId)).willReturn(boardFindByIdResponse);
+        FindByIdBoardResponse findByIdBoardResponse = new FindByIdBoardResponse(
+                boardId, "안녕하세요", "최성욱입니다.", "최성욱", 2L, 0L, Genre.SF_FANTASY);
+        given(boardService.findById(boardId)).willReturn(findByIdBoardResponse);
 
         // when & then
         mockMvc.perform(get("/api/boards/{id}", boardId))
@@ -104,6 +100,7 @@ class BoardControllerTest {
                 new BoardFindAllResponse("안녕", "최성욱입니다.", "최성욱", 0L, 1L, Genre.ETC),
                 new BoardFindAllResponse("출첵", "출석체크할게요", "박상민", 10L, 1L, Genre.ETC));
         given(boardService.findAll()).willReturn(boardFindAllResponses);
+
         // when & then
         mockMvc.perform(get("/api/boards"))
                 .andExpect(status().isOk())

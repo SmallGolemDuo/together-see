@@ -3,6 +3,7 @@ package com.smallgolemduo.togethersee.service;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.entity.enums.Genre;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -82,6 +83,32 @@ class BoardServiceTest {
 
         // then
         assertThat(isDelete).isTrue();
+    }
+
+    @Test
+    @DisplayName("게시글 조회")
+    void findById() {
+        // given
+        Long boardId = 2L;
+        Board board = Board.builder()
+                .id(boardId)
+                .title("제목")
+                .content("내용")
+                .author("최성욱")
+                .likes(1L)
+                .dislikes(1L)
+                .genre(Genre.ROMANCE_COMEDY)
+                .userId(1L)
+                .build();
+        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
+        FindByIdBoardResponse boardResponse = boardService.findById(boardId);
+
+        // when
+        FindByIdBoardResponse findByIdBoardResponse = new FindByIdBoardResponse(
+                boardId, "제목", "내용", "최성욱", 1L, 1L, Genre.ROMANCE_COMEDY);
+
+        // then
+        assertThat(boardResponse).usingRecursiveComparison().isEqualTo(findByIdBoardResponse);
     }
 
 }
