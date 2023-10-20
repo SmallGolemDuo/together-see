@@ -19,6 +19,8 @@ import java.util.List;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/api/boards")
 @RequiredArgsConstructor
