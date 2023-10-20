@@ -48,8 +48,8 @@ public class BoardController {
     }
 
     @DeleteMapping("/{boardId}")
-    public boolean delete(@PathVariable("boardId") Long id) {
-        return boardService.delete(id);
+    public boolean deleted(@PathVariable("boardId") Long id) {
+        return boardService.deleted(id);
     }
 
 }

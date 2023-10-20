@@ -48,7 +48,7 @@ public class BoardService {
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean deleted(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
         boardRepository.delete(board);
