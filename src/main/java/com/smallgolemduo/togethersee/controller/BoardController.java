@@ -66,4 +66,9 @@ public class BoardController {
         return commentService.findByIdComment(id, commentId);
     }
 
+    @GetMapping("/{boardId}/comments")
+    public List<FindAllCommentResponse> findAllComment(@PathVariable("boardId") Long id) {
+        return commentService.findAllContent(id);
+    }
+
 }
