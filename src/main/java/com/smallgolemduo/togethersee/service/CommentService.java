@@ -2,6 +2,8 @@ package com.smallgolemduo.togethersee.service;
 
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
 import com.smallgolemduo.togethersee.dto.response.CreateCommentResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdCommentResponse;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.entity.Comment;
 import com.smallgolemduo.togethersee.entity.User;
@@ -35,6 +37,16 @@ public class CommentService {
 
         CreateCommentResponse response = CreateCommentResponse.from(savedComment);
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public FindByIdCommentResponse findByIdComment(Long id, Long commentId) {
+        boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("작성된 댓글이 없습니다."));
+        return FindByIdCommentResponse.from(comment);
     }
 
 }

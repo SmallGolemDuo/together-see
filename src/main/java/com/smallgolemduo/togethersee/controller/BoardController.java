@@ -1,6 +1,7 @@
 package com.smallgolemduo.togethersee.controller;
 
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
+import com.smallgolemduo.togethersee.dto.response.FindByIdCommentResponse;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
 import com.smallgolemduo.togethersee.service.BoardService;
@@ -57,6 +58,12 @@ public class BoardController {
     public CreateCommentResponse createComment(@PathVariable("boardId") Long id,
                                                @RequestBody @Valid CreateCommentRequest createCommentRequest) {
         return commentService.createComment(id, createCommentRequest);
+    }
+
+    @GetMapping("/{boardId}/comments/{commentId}")
+    public FindByIdCommentResponse findByIdComment(@PathVariable("boardId") Long id,
+                                                   @PathVariable("commentId") Long commentId) {
+        return commentService.findByIdComment(id, commentId);
     }
 
 }
