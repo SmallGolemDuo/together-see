@@ -1,9 +1,7 @@
 package com.smallgolemduo.togethersee.service;
 
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
-import com.smallgolemduo.togethersee.dto.response.CreateCommentResponse;
-import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
-import com.smallgolemduo.togethersee.dto.response.FindByIdCommentResponse;
+import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.entity.Comment;
 import com.smallgolemduo.togethersee.entity.User;
@@ -13,6 +11,8 @@ import com.smallgolemduo.togethersee.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +47,13 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 댓글이 없습니다."));
         return FindByIdCommentResponse.from(comment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<FindAllCommentResponse> findAllContent(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다"));
+        return FindAllCommentResponse.fromList(commentRepository.findByBoard(board));
     }
 
 }
