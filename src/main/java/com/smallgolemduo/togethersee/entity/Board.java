@@ -4,6 +4,8 @@ import com.smallgolemduo.togethersee.entity.enums.Genre;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +25,8 @@ public class Board {
     @Enumerated(EnumType.STRING)
     private Genre genre;
     private Long userId;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 
     public void modifyBoardInfo(String title, String content, String author, Genre genre) {
         if (title != null) {
