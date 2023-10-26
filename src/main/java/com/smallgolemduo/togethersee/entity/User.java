@@ -27,6 +27,8 @@ public class User {
     private String password;
     private String birth;
     private String phoneNumber;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Board> boards = new ArrayList<>();
 
     public void modifyUserInfo(String password, String phoneNumber) {
         this.password = password;

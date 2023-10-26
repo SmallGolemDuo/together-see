@@ -2,9 +2,9 @@ package com.smallgolemduo.togethersee.controller;
 
 import com.smallgolemduo.togethersee.dto.request.UserCreateRequest;
 import com.smallgolemduo.togethersee.dto.request.UserUpdateRequest;
-import com.smallgolemduo.togethersee.dto.response.UserCreateResponse;
+import com.smallgolemduo.togethersee.dto.response.CreateUserResponse;
 import com.smallgolemduo.togethersee.dto.response.UserFindAllResponse;
-import com.smallgolemduo.togethersee.dto.response.UserFindByIdResponse;
+import com.smallgolemduo.togethersee.dto.response.FindByIdUserResponse;
 import com.smallgolemduo.togethersee.dto.response.UserUpdateResponse;
 import com.smallgolemduo.togethersee.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/api/user")
-    public UserCreateResponse createUser(@RequestBody UserCreateRequest userCreateRequest) {
+    public CreateUserResponse createUser(@RequestBody UserCreateRequest userCreateRequest) {
         return userService.createUser(userCreateRequest);
     }
 
     @GetMapping("/api/user/{userId}")
-    public UserFindByIdResponse findByIdUser(@PathVariable("userId") Long id) {
-        return userService.findById(id);
+    public FindByIdUserResponse findById(@PathVariable("userId") Long id) {
+        return FindByIdUserResponse.from(userService.findById(id));
     }
 
     @PutMapping("/api/user/{userId}")

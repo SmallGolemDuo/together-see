@@ -1,6 +1,6 @@
 package com.smallgolemduo.togethersee.dto.request;
 
-import com.smallgolemduo.togethersee.entity.enums.Genre;
+import com.smallgolemduo.togethersee.entity.enums.MovieType;
 import lombok.*;
 
 @Getter
@@ -10,7 +10,6 @@ public class UpdateBoardRequest {
 
     private String title;
     private String content;
-    private String author;
-    private Genre genre;
+    private MovieType movieType;
 
 }

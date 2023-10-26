@@ -3,7 +3,9 @@ package com.smallgolemduo.togethersee.controller;
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
 import com.smallgolemduo.togethersee.dto.response.FindByIdCommentResponse;
 import com.smallgolemduo.togethersee.dto.response.*;
-import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
+import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
+import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
+import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
 import com.smallgolemduo.togethersee.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smallgolemduo.togethersee.dto.response.FindAllBoardResponse;
+
 import java.util.List;
 
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
+import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 
 import javax.validation.Valid;
 
@@ -29,8 +34,8 @@ public class BoardController {
     private final CommentService commentService;
 
     @PostMapping
-    public BoardCreateResponse create(@RequestBody @Valid BoardCreateRequest boardCreateRequest) {
-        return boardService.create(boardCreateRequest);
+    public CreateBoardResponse create(@RequestBody @Valid CreateBoardRequest createBoardRequest) {
+        return boardService.create(createBoardRequest);
     }
 
     @GetMapping("/{boardId}")
@@ -39,14 +44,14 @@ public class BoardController {
     }
 
     @GetMapping
-    public List<BoardFindAllResponse> findAll() {
+    public List<FindAllBoardResponse> findAll() {
         return boardService.findAll();
     }
 
     @PutMapping("{boardId}")
     public UpdateBoardResponse update(@PathVariable("boardId") Long id,
-                                      @RequestBody UpdateBoardRequest updateBoardRequest) {
-        return boardService.update(id, updateBoardRequest);
+                                      @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
+        return boardService.updateBoard(id, updateBoardRequest);
     }
 
     @DeleteMapping("/{boardId}")

@@ -1,12 +1,11 @@
 package com.smallgolemduo.togethersee.service;
 
-import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
+import com.smallgolemduo.togethersee.dto.BoardPayload;
+import com.smallgolemduo.togethersee.dto.UserPayload;
+import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
-import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
-import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
-import com.smallgolemduo.togethersee.dto.response.BoardFindAllResponse;
+import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
-import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,14 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    private final UserService userService;
+
     @Transactional
-    public BoardCreateResponse create(BoardCreateRequest boardCreateRequest) {
-        return BoardCreateResponse.from(boardRepository.save(boardCreateRequest.toEntity()));
+    public CreateBoardResponse create(CreateBoardRequest createBoardRequest) {
+        UserPayload userPayload = userService.findById(createBoardRequest.getUserId());
+        Board board = createBoardRequest.toEntity();
+        board.setUser(userPayload.toEntity());
+        return CreateBoardResponse.from(BoardPayload.from(boardRepository.save(board)));
     }
 
     @Transactional(readOnly = true)
@@ -33,17 +37,19 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardFindAllResponse> findAll() {
-        return BoardFindAllResponse.fromList(boardRepository.findAll());
+    public List<FindAllBoardResponse> findAll() {
+        List<Board> users = boardRepository.findAll();
+        return FindAllBoardResponse.fromList(users);
     }
 
     @Transactional
-    public UpdateBoardResponse update(Long id, UpdateBoardRequest updateBoardRequest) {
+    public UpdateBoardResponse updateBoard(Long id, UpdateBoardRequest updateBoardRequest) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
         board.modifyBoardInfo(
-                updateBoardRequest.getTitle(), updateBoardRequest.getContent(),
-                updateBoardRequest.getAuthor(), updateBoardRequest.getGenre());
+                updateBoardRequest.getTitle(),
+                updateBoardRequest.getContent(),
+                updateBoardRequest.getMovieType());
         return UpdateBoardResponse.from(boardRepository.save(board));
     }
 

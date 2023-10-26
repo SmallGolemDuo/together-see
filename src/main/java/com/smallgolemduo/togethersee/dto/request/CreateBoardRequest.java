@@ -1,7 +1,7 @@
 package com.smallgolemduo.togethersee.dto.request;
 
 import com.smallgolemduo.togethersee.entity.Board;
-import com.smallgolemduo.togethersee.entity.enums.Genre;
+import com.smallgolemduo.togethersee.entity.enums.MovieType;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardCreateRequest {
+public class CreateBoardRequest {
 
     private static final Long DEFAULT_VALUE = 0L;
 
@@ -24,12 +24,8 @@ public class BoardCreateRequest {
     @Size(min = 2, max = 200, message = "제목은 2-200자 사이입니다.")
     private String content;
 
-    @NotBlank(message = "작성자는 필수 입력 항목 입니다.")
-    @Size(min = 2, max = 10, message = "제목은 2-10자 사이입니다.")
-    private String author;
-
     @NotNull(message = "장르는 필수 항목 입니다.")
-    private Genre genre;
+    private MovieType movieType;
 
     private Long userId;
 
@@ -37,11 +33,9 @@ public class BoardCreateRequest {
         return Board.builder()
                 .title(this.title)
                 .content(this.content)
-                .author(this.author)
                 .likes(DEFAULT_VALUE)
                 .dislikes(DEFAULT_VALUE)
-                .genre(this.genre)
-                .userId(this.userId)
+                .movieType(this.movieType)
                 .build();
     }
 

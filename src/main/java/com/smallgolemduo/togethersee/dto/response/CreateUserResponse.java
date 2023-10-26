@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateResponse {
+public class CreateUserResponse {
 
   private String username;
   private String email;
@@ -20,8 +20,8 @@ public class UserCreateResponse {
   private String birth;
   private String phoneNumber;
 
-  public static UserCreateResponse from(User user) {
-    return UserCreateResponse.builder()
+  public static CreateUserResponse from(User user) {
+    return CreateUserResponse.builder()
         .username(user.getUsername())
         .email(user.getEmail())
         .password(user.getPassword())
