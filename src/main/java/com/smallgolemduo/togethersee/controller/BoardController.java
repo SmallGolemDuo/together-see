@@ -31,7 +31,6 @@ import javax.validation.Valid;
 public class BoardController {
 
     private final BoardService boardService;
-    private final CommentService commentService;
 
     @PostMapping
     public CreateBoardResponse create(@RequestBody @Valid CreateBoardRequest createBoardRequest) {
@@ -59,21 +58,21 @@ public class BoardController {
         return boardService.deleted(id);
     }
 
-    @PostMapping("/{boardId}/comments")
-    public CreateCommentResponse createComment(@PathVariable("boardId") Long id,
-                                               @RequestBody @Valid CreateCommentRequest createCommentRequest) {
-        return commentService.createComment(id, createCommentRequest);
-    }
-
-    @GetMapping("/{boardId}/comments/{commentId}")
-    public FindByIdCommentResponse findByIdComment(@PathVariable("boardId") Long id,
-                                                   @PathVariable("commentId") Long commentId) {
-        return commentService.findByIdComment(id, commentId);
-    }
-
-    @GetMapping("/{boardId}/comments")
-    public List<FindAllCommentResponse> findAllComment(@PathVariable("boardId") Long id) {
-        return commentService.findAllContent(id);
-    }
+//    @PostMapping("/{boardId}/comments")
+//    public CreateCommentResponse createComment(@PathVariable("boardId") Long id,
+//                                               @RequestBody @Valid CreateCommentRequest createCommentRequest) {
+//        return commentService.createComment(id, createCommentRequest);
+//    }
+//
+//    @GetMapping("/{boardId}/comments/{commentId}")
+//    public FindByIdCommentResponse findByIdComment(@PathVariable("boardId") Long id,
+//                                                   @PathVariable("commentId") Long commentId) {
+//        return commentService.findByIdComment(id, commentId);
+//    }
+//
+//    @GetMapping("/{boardId}/comments")
+//    public List<FindAllCommentResponse> findAllComment(@PathVariable("boardId") Long id) {
+//        return commentService.findAllContent(id);
+//    }
 
 }
