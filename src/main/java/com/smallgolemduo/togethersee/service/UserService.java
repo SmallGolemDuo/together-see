@@ -1,11 +1,9 @@
 package com.smallgolemduo.togethersee.service;
 
+import com.smallgolemduo.togethersee.dto.UserPayload;
 import com.smallgolemduo.togethersee.dto.request.UserCreateRequest;
 import com.smallgolemduo.togethersee.dto.request.UserUpdateRequest;
-import com.smallgolemduo.togethersee.dto.response.UserCreateResponse;
-import com.smallgolemduo.togethersee.dto.response.UserFindAllResponse;
-import com.smallgolemduo.togethersee.dto.response.UserFindByIdResponse;
-import com.smallgolemduo.togethersee.dto.response.UserUpdateResponse;
+import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.User;
 import com.smallgolemduo.togethersee.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +19,15 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
-        return UserCreateResponse.from(userRepository.save(userCreateRequest.toEntity()));
+    public CreateUserResponse createUser(UserCreateRequest userCreateRequest) {
+        return CreateUserResponse.from(userRepository.save(userCreateRequest.toEntity()));
     }
 
     @Transactional(readOnly = true)
-    public UserFindByIdResponse findById(Long id) {
+    public UserPayload findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
-        return UserFindByIdResponse.from(user);
+        return UserPayload.from(user);
     }
 
     @Transactional(readOnly = true)

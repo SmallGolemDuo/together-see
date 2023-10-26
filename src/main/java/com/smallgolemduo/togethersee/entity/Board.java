@@ -1,6 +1,6 @@
 package com.smallgolemduo.togethersee.entity;
 
-import com.smallgolemduo.togethersee.entity.enums.Genre;
+import com.smallgolemduo.togethersee.entity.enums.MovieType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,28 +20,20 @@ public class Board {
     private Long id;
     private String title;
     private String content;
-    private String author;
     private Long likes;
     private Long dislikes;
     @Enumerated(EnumType.STRING)
-    private Genre genre;
-    private Long userId;
+    private MovieType movieType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    public void modifyBoardInfo(String title, String content, String author, Genre genre) {
-        if (title != null) {
-            this.title = title;
-        }
-        if (content != null) {
-            this.content = content;
-        }
-        if (author != null) {
-            this.author = author;
-        }
-        if (genre != null) {
-            this.genre = genre;
-        }
+    public void modifyBoardInfo(String title, String content, MovieType movieType) {
+        this.title = title;
+        this.content = content;
+        this.movieType = movieType;
     }
 
 }
