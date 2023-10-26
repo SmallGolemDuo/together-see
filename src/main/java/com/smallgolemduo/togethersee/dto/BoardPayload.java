@@ -22,7 +22,6 @@ public class BoardPayload {
     private Long dislikes;
     private MovieType movieType;
     private Long userId;
-    private List<CommentPayload> commentPayloads;
 
     public static BoardPayload from(Board board) {
         return BoardPayload.builder()
