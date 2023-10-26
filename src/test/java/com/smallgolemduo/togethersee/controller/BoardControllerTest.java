@@ -1,13 +1,12 @@
 package com.smallgolemduo.togethersee.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smallgolemduo.togethersee.dto.request.BoardCreateRequest;
-import com.smallgolemduo.togethersee.dto.response.BoardCreateResponse;
-import com.smallgolemduo.togethersee.dto.response.BoardFindAllResponse;
+import com.smallgolemduo.togethersee.dto.BoardPayload;
+import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
+import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
-import com.smallgolemduo.togethersee.entity.enums.Genre;
 import com.smallgolemduo.togethersee.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.smallgolemduo.togethersee.entity.enums.Genre.ACTION;
+import static com.smallgolemduo.togethersee.entity.enums.MovieType.ACTION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,25 +48,25 @@ class BoardControllerTest {
     @DisplayName("게시글 등록")
     void create() throws Exception {
         // given
-        BoardCreateRequest boardCreateRequest = new BoardCreateRequest(
-                "안녕하세요", "인사!", "최성욱", ACTION, 1L);
-        BoardCreateResponse boardCreateResponse = new BoardCreateResponse(
-                2L, "안녕하세요.", "인사!", "최성욱", 365L, 1L, ACTION);
-        given(boardService.create(any())).willReturn(boardCreateResponse);
+        CreateBoardRequest createBoardRequest = new CreateBoardRequest(
+                "안녕하세요", "최성욱입니다", ACTION, 1L);
+        BoardPayload boardPayload = new BoardPayload(
+                1L, "안녕하세요", "최성욱입니다", 0L, 1L, ACTION, 1L);
+        CreateBoardResponse createBoardResponse = new CreateBoardResponse(boardPayload);
+        given(boardService.create(any())).willReturn(createBoardResponse);
 
         // when & then
-        String valueAsString = objectMapper.writeValueAsString(boardCreateRequest);
+        String valueAsString = objectMapper.writeValueAsString(createBoardRequest);
         mockMvc.perform(post("/api/boards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(valueAsString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2L))
-                .andExpect(jsonPath("$.title").value("안녕하세요."))
-                .andExpect(jsonPath("$.content").value("인사!"))
-                .andExpect(jsonPath("$.author").value("최성욱"))
-                .andExpect(jsonPath("$.likes").value(365L))
-                .andExpect(jsonPath("$.dislikes").value(1L))
-                .andExpect(jsonPath("$.genre").value("ACTION"))
+                .andExpect(jsonPath("$.boardPayload.id").value(1L))
+                .andExpect(jsonPath("$.boardPayload.title").value("안녕하세요"))
+                .andExpect(jsonPath("$.boardPayload.content").value("최성욱입니다"))
+                .andExpect(jsonPath("$.boardPayload.likes").value(0L))
+                .andExpect(jsonPath("$.boardPayload.dislikes").value(1L))
+                .andExpect(jsonPath("$.boardPayload.movieType").value("ACTION"))
                 .andDo(print());
     }
 
