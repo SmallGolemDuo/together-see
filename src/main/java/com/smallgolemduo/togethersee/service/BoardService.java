@@ -17,9 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRepository;
-
     private final UserService userService;
+
+    private final BoardRepository boardRepository;
 
     @Transactional
     public CreateBoardResponse create(CreateBoardRequest createBoardRequest) {
@@ -33,7 +33,7 @@ public class BoardService {
     public FindByIdBoardResponse findById(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
-        return FindByIdBoardResponse.from(board);
+        return FindByIdBoardResponse.from(BoardPayload.from(board));
     }
 
     @Transactional(readOnly = true)
