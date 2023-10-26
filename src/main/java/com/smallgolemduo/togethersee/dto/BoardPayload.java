@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -20,6 +22,7 @@ public class BoardPayload {
     private Long dislikes;
     private MovieType movieType;
     private Long userId;
+    private List<CommentPayload> commentPayloads;
 
     public static BoardPayload from(Board board) {
         return BoardPayload.builder()
