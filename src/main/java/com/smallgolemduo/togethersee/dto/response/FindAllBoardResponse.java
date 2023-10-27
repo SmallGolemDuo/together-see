@@ -1,38 +1,24 @@
 package com.smallgolemduo.togethersee.dto.response;
 
-import com.smallgolemduo.togethersee.entity.Board;
-import com.smallgolemduo.togethersee.entity.enums.MovieType;
+import com.smallgolemduo.togethersee.dto.BoardPayload;
 import lombok.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class FindAllBoardResponse {
 
-    private String title;
-    private String content;
-    private Long likes;
-    private Long dislikes;
-    private MovieType movieType;
+    private List<BoardPayload> boardPayloads;
 
-    public static FindAllBoardResponse from(Board board) {
-        return FindAllBoardResponse.builder()
-                .title(board.getTitle())
-                .content(board.getContent())
-                .likes(board.getLikes())
-                .dislikes(board.getDislikes())
-                .movieType(board.getMovieType())
-                .build();
-    }
-
-    public static List<FindAllBoardResponse> fromList(List<Board> boards) {
-        return boards.stream()
-                .map(FindAllBoardResponse::from)
+    public static List<FindAllBoardResponse> from(List<BoardPayload> boardPayloads) {
+        return boardPayloads.stream()
+                .map(boardPayload -> FindAllBoardResponse.builder()
+                        .boardPayloads(Collections.singletonList(boardPayload))
+                        .build())
                 .collect(Collectors.toList());
     }
 

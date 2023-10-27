@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +39,11 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<FindAllBoardResponse> findAll() {
-        List<Board> users = boardRepository.findAll();
-        return FindAllBoardResponse.fromList(users);
+        List<Board> boards = boardRepository.findAll();
+        List<BoardPayload> boardPayloads = boards.stream()
+                .map(BoardPayload::from)
+                .collect(Collectors.toList());
+        return FindAllBoardResponse.from(boardPayloads);
     }
 
     @Transactional
