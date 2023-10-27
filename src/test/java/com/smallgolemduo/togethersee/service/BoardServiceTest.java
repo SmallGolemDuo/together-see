@@ -4,6 +4,7 @@ import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
+import com.smallgolemduo.togethersee.dto.response.FindAllBoardResponse;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.entity.User;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
@@ -79,6 +80,63 @@ class BoardServiceTest {
         assertThat(expectedValue).usingRecursiveComparison().isEqualTo(resultValue);
     }
 
+    @Test
+    @DisplayName("게시글 조회")
+    void findById() {
+        // given
+        Long boardId = 5L;
+        Board board = Board.builder()
+                .id(boardId).title("이거 재밌네").content("극한직업").likes(1L)
+                .dislikes(1L).movieType(ROMANCE_COMEDY).user(User.builder()
+                        .id(1L).username("성욱").email("asd@naver.com")
+                        .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                        .build())
+                .build();
+        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
+
+        FindByIdBoardResponse expectedValue = FindByIdBoardResponse.from(BoardPayload.from(
+                Board.builder()
+                        .id(boardId).title("이거 재밌네").content("극한직업").likes(1L)
+                        .dislikes(1L).movieType(ROMANCE_COMEDY)
+                        .user(User.builder()
+                                .id(1L).username("성욱").email("asd@naver.com")
+                                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                                .build())
+                        .build()));
+
+        // when
+        FindByIdBoardResponse findByIdBoardResponse = boardService.findById(boardId);
+
+        // then
+        assertThat(findByIdBoardResponse).usingRecursiveComparison().isEqualTo(expectedValue);
+    }
+
+    @Test
+    @DisplayName("게시글 전체 조회")
+    void findAll() {
+        // given
+        User user = User.builder()
+                .id(1L).username("성욱").email("asd@naver.com")
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                .build();
+        List<Board> boards = List.of(
+                new Board(1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, user),
+                new Board(2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, user));
+        List<FindAllBoardResponse> expectedValue = List.of(
+                new FindAllBoardResponse(List.of(
+                        new BoardPayload(1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, 1L))),
+                new FindAllBoardResponse(List.of(
+                        new BoardPayload(2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, 1L))));
+        given(boardRepository.findAll()).willReturn(boards);
+
+        // when
+        List<FindAllBoardResponse> findAllBoardResponses = boardService.findAll();
+
+        // then
+        assertThat(findAllBoardResponses).usingRecursiveComparison().isEqualTo(expectedValue);
+    }
+
+
 //    @DisplayName("게시글 수정")
 //    void update() {
 //        // given
@@ -133,30 +191,5 @@ class BoardServiceTest {
 //        assertThat(isDelete).isTrue();
 //    }
 //
-//    @Test
-//    @DisplayName("게시글 조회")
-//    void findById() {
-//        // given
-//        Long boardId = 2L;
-//        Board board = Board.builder()
-//                .id(boardId)
-//                .title("제목")
-//                .content("내용")
-//                .author("최성욱")
-//                .likes(1L)
-//                .dislikes(1L)
-//                .genre(Genre.ROMANCE_COMEDY)
-//                .userId(1L)
-//                .build();
-//        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
-//        FindByIdBoardResponse boardResponse = boardService.findById(boardId);
-//
-//        // when
-//        FindByIdBoardResponse findByIdBoardResponse = new FindByIdBoardResponse(
-//                boardId, "제목", "내용", "최성욱", 1L, 1L, Genre.ROMANCE_COMEDY);
-//
-//        // then
-//        assertThat(boardResponse).usingRecursiveComparison().isEqualTo(findByIdBoardResponse);
-//    }
 
 }

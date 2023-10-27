@@ -5,6 +5,7 @@ import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
+import com.smallgolemduo.togethersee.dto.response.FindAllBoardResponse;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
@@ -17,12 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.smallgolemduo.togethersee.entity.enums.MovieType.ACTION;
-import static com.smallgolemduo.togethersee.entity.enums.MovieType.DRAMA_DOCUMENTARY;
+import static com.smallgolemduo.togethersee.entity.enums.MovieType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -96,34 +97,37 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-//    @Test
-//    @DisplayName("게시글 전체 조회")
-//    void findAll() throws Exception {
-//        // given
-//        List<BoardFindAllResponse> boardFindAllResponses = List.of(
-//                new BoardFindAllResponse("안녕", "최성욱입니다.", "최성욱", 0L, 1L, Genre.ETC),
-//                new BoardFindAllResponse("출첵", "출석체크할게요", "박상민", 10L, 1L, Genre.ETC));
-//        given(boardService.findAll()).willReturn(boardFindAllResponses);
-//
-//        // when & then
-//        mockMvc.perform(get("/api/boards"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray())
-//                .andExpect(jsonPath("$.length()").value(boardFindAllResponses.size()))
-//                .andExpect(jsonPath("$[0].title").value(boardFindAllResponses.get(0).getTitle()))
-//                .andExpect(jsonPath("$[0].content").value(boardFindAllResponses.get(0).getContent()))
-//                .andExpect(jsonPath("$[0].author").value(boardFindAllResponses.get(0).getAuthor()))
-//                .andExpect(jsonPath("$[0].likes").value(boardFindAllResponses.get(0).getLikes()))
-//                .andExpect(jsonPath("$[0].dislikes").value(boardFindAllResponses.get(0).getDislikes()))
-//                .andExpect(jsonPath("$[0].genre").value(boardFindAllResponses.get(0).getGenre().toString()))
-//                .andExpect(jsonPath("$[1].title").value(boardFindAllResponses.get(1).getTitle()))
-//                .andExpect(jsonPath("$[1].content").value(boardFindAllResponses.get(1).getContent()))
-//                .andExpect(jsonPath("$[1].author").value(boardFindAllResponses.get(1).getAuthor()))
-//                .andExpect(jsonPath("$[1].likes").value(boardFindAllResponses.get(1).getLikes()))
-//                .andExpect(jsonPath("$[1].dislikes").value(boardFindAllResponses.get(1).getDislikes()))
-//                .andExpect(jsonPath("$[1].genre").value(boardFindAllResponses.get(1).getGenre().toString()))
-//                .andDo(print());
-//    }
+    @Test
+    @DisplayName("게시글 전체 조회")
+    void findAll() throws Exception {
+        // given
+        List<FindAllBoardResponse> findAllBoardResponses = List.of(
+                new FindAllBoardResponse(List.of(
+                        new BoardPayload(1L, "출첵", "재밌다", 1L, 0L, ETC, 1L))),
+                new FindAllBoardResponse(List.of(
+                        new BoardPayload(2L, "출첵2", "재밌더라", 10L, 1L, ETC, 1L))));
+        given(boardService.findAll()).willReturn(findAllBoardResponses);
+
+        // when & then
+        mockMvc.perform(get("/api/boards"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(findAllBoardResponses.size()))
+                .andExpect(jsonPath("$[0].boardPayloads[0].id").value(1L))
+                .andExpect(jsonPath("$[0].boardPayloads[0].title").value("출첵"))
+                .andExpect(jsonPath("$[0].boardPayloads[0].content").value("재밌다"))
+                .andExpect(jsonPath("$[0].boardPayloads[0].likes").value(1L))
+                .andExpect(jsonPath("$[0].boardPayloads[0].dislikes").value(0L))
+                .andExpect(jsonPath("$[0].boardPayloads[0].movieType").value("ETC"))
+                .andExpect(jsonPath("$[0].boardPayloads[0].userId").value(1L))
+                .andExpect(jsonPath("$[1].boardPayloads[0].id").value(2L))
+                .andExpect(jsonPath("$[1].boardPayloads[0].title").value("출첵2"))
+                .andExpect(jsonPath("$[1].boardPayloads[0].content").value("재밌더라"))
+                .andExpect(jsonPath("$[1].boardPayloads[0].likes").value(10L))
+                .andExpect(jsonPath("$[1].boardPayloads[0].dislikes").value(1L))
+                .andExpect(jsonPath("$[1].boardPayloads[0].movieType").value("ETC"))
+                .andExpect(jsonPath("$[1].boardPayloads[0].userId").value(1L))
+                .andDo(print());
+    }
 //
 //    @Test
 //    @DisplayName("게시글 전체 수정")
