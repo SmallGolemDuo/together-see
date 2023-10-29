@@ -47,14 +47,19 @@ public class BoardService {
     }
 
     @Transactional
-    public UpdateBoardResponse updateBoard(Long id, UpdateBoardRequest updateBoardRequest) {
+    public UpdateBoardResponse update(Long id, UpdateBoardRequest updateBoardRequest) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
-        board.modifyBoardInfo(
-                updateBoardRequest.getTitle(),
-                updateBoardRequest.getContent(),
-                updateBoardRequest.getMovieType());
-        return UpdateBoardResponse.from(boardRepository.save(board));
+        if (updateBoardRequest.getTitle() != null) {
+            board.setTitle(updateBoardRequest.getTitle());
+        }
+        if (updateBoardRequest.getContent() != null) {
+            board.setContent(updateBoardRequest.getContent());
+        }
+        if (updateBoardRequest.getMovieType() != null) {
+            board.setMovieType(updateBoardRequest.getMovieType());
+        }
+        return UpdateBoardResponse.from(BoardPayload.from(boardRepository.save(board)));
     }
 
     @Transactional

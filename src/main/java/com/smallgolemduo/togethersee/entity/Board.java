@@ -30,10 +30,4 @@ public class Board {
 //    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
 
-    public void modifyBoardInfo(String title, String content, MovieType movieType) {
-        this.title = title;
-        this.content = content;
-        this.movieType = movieType;
-    }
-
 }
