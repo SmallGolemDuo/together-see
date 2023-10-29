@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -155,17 +156,18 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-//    @Test
-//    @DisplayName("게시글 삭제")
-//    void deleted() throws Exception {
-//        // given
-//        Long boardId = 3L;
-//
-//        // when & then
-//        mockMvc.perform(delete("/api/boards/{boardId}", boardId))
-//                .andExpect(status().isOk())
-//                .andDo(print());
-//        verify(boardService).deleted(boardId);
-//    }
+    @Test
+    @DisplayName("게시글 삭제")
+    void deleted() throws Exception {
+        // given
+        Long boardId = new Random().nextLong();
+        given(boardService.deleted(any())).willReturn(true);
+
+        // when & then
+        mockMvc.perform(delete("/api/boards/{boardId}", boardId))
+                .andExpect(status().isOk())
+                .andDo(print());
+        verify(boardService).deleted(boardId);
+    }
 
 }
