@@ -26,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import java.util.Optional;
+import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -84,7 +85,7 @@ class BoardServiceTest {
     @DisplayName("게시글 조회")
     void findById() {
         // given
-        Long boardId = 5L;
+        Long boardId = new Random().nextLong();
         Board board = Board.builder()
                 .id(boardId).title("이거 재밌네").content("극한직업").likes(1L)
                 .dislikes(1L).movieType(ROMANCE_COMEDY).user(User.builder()
@@ -136,45 +137,37 @@ class BoardServiceTest {
         assertThat(findAllBoardResponses).usingRecursiveComparison().isEqualTo(expectedValue);
     }
 
+    @Test
+    @DisplayName("게시글 수정")
+    void update() {
+        // given
+        Long boardId = new Random().nextLong();
+        User user = User.builder()
+                .id(1L).username("성욱").email("asd@naver.com")
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                .build();
+        Board board = Board.builder()
+                .id(boardId).title("제목입니다").content("내용입니다")
+                .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
+                .build();
+        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
 
-//    @DisplayName("게시글 수정")
-//    void update() {
-//        // given
-//        Long boardId = 1L;
-//        Board board = Board.builder()
-//                .id(boardId)
-//                .title("제목입니다")
-//                .content("내용입니다")
-//                .author("최성욱")
-//                .likes(1L)
-//                .dislikes(2L)
-//                .genre(Genre.DRAMA_DOCUMENTARY)
-//                .userId(3L)
-//                .build();
-//        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
-//        Board modifyBoard = Board.builder()
-//                .id(boardId)
-//                .title("새로운 제목")
-//                .content("새로운 내용")
-//                .author("새로운 작성자")
-//                .likes(1L)
-//                .dislikes(2L)
-//                .genre(Genre.DRAMA_DOCUMENTARY)
-//                .userId(3L)
-//                .build();
-//        given(boardRepository.save(any())).willReturn(modifyBoard);
-//        UpdateBoardRequest boardRequest = new UpdateBoardRequest(
-//                "새로운 제목", "새로운 내용", "새로운 작성자", Genre.DRAMA_DOCUMENTARY);
-//        UpdateBoardResponse boardResponse = new UpdateBoardResponse(
-//                boardId, "새로운 제목", "새로운 내용", "새로운 작성자", 1L, 2L,
-//                Genre.DRAMA_DOCUMENTARY);
-//
-//        // when
-//        UpdateBoardResponse expectedUpdateBoardResponse = boardService.update(boardId, boardRequest);
-//
-//        // then
-//        assertThat(boardResponse).usingRecursiveComparison().isEqualTo(expectedUpdateBoardResponse);
-//    }
+        Board updateBoard = Board.builder()
+                .id(boardId).title("새로운 제목").content("새로운 내용")
+                .likes(1L).dislikes(2L).movieType(ACTION).user(user)
+                .build();
+        given(boardRepository.save(any())).willReturn(updateBoard);
+        UpdateBoardRequest updateBoardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ACTION);
+        UpdateBoardResponse expectedBoardResponse = new UpdateBoardResponse(
+                new BoardPayload(boardId, "새로운 제목", "새로운 내용", 1L, 2L,
+                        ACTION, 1L));
+
+        // when
+        UpdateBoardResponse updateBoardResponse = boardService.update(boardId, updateBoardRequest);
+
+        // then
+        assertThat(updateBoardResponse).usingRecursiveComparison().isEqualTo(expectedBoardResponse);
+    }
 //
 //    @Test
 //    @DisplayName("게시글 삭제")

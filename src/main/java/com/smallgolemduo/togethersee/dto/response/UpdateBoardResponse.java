@@ -1,7 +1,6 @@
 package com.smallgolemduo.togethersee.dto.response;
 
-import com.smallgolemduo.togethersee.entity.Board;
-import com.smallgolemduo.togethersee.entity.enums.MovieType;
+import com.smallgolemduo.togethersee.dto.BoardPayload;
 import lombok.*;
 
 @Getter
@@ -9,21 +8,11 @@ import lombok.*;
 @AllArgsConstructor
 public class UpdateBoardResponse {
 
-    private Long id;
-    private String title;
-    private String content;
-    private Long likes;
-    private Long dislikes;
-    private MovieType movieType;
+    private BoardPayload boardPayload;
 
-    public static UpdateBoardResponse from(Board board) {
+    public static UpdateBoardResponse from(BoardPayload boardPayload) {
         return UpdateBoardResponse.builder()
-                .id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .likes(board.getLikes())
-                .dislikes(board.getDislikes())
-                .movieType(board.getMovieType())
+                .boardPayload(boardPayload)
                 .build();
     }
 

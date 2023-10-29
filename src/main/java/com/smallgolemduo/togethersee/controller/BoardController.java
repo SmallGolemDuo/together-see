@@ -47,10 +47,10 @@ public class BoardController {
         return boardService.findAll();
     }
 
-    @PutMapping("{boardId}")
+    @PutMapping("/{boardId}")
     public UpdateBoardResponse update(@PathVariable("boardId") Long id,
                                       @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
-        return boardService.updateBoard(id, updateBoardRequest);
+        return boardService.update(id, updateBoardRequest);
     }
 
     @DeleteMapping("/{boardId}")

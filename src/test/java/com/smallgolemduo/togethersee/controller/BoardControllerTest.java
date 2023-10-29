@@ -128,142 +128,33 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$[1].boardPayloads[0].userId").value(1L))
                 .andDo(print());
     }
-//
-//    @Test
-//    @DisplayName("게시글 전체 수정")
-//    void update_all() throws Exception {
-//        // given
-//        Long boardId = 1L;
-//        UpdateBoardRequest boardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용",
-//                "새로운 작성자", Genre.ETC);
-//        UpdateBoardResponse boardResponse = new UpdateBoardResponse(1L, "새로운 제목", "새로운 내용",
-//                "새로운 작성자", 1L, 3L, Genre.ETC);
-//        given(boardService.update(any(), any())).willReturn(boardResponse);
-//
-//        // when & then
-//        String writeValueAsString = objectMapper.writeValueAsString(boardRequest);
-//        mockMvc.perform(put("/api/boards/{boardId}", boardId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(writeValueAsString))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(1L))
-//                .andExpect(jsonPath("$.title").value("새로운 제목"))
-//                .andExpect(jsonPath("$.content").value("새로운 내용"))
-//                .andExpect(jsonPath("$.author").value("새로운 작성자"))
-//                .andExpect(jsonPath("$.likes").value(1L))
-//                .andExpect(jsonPath("$.dislikes").value(3L))
-//                .andExpect(jsonPath("$.genre").value("ETC"))
-//                .andDo(print());
-//    }
-//
-//    @Test
-//    @DisplayName("게시글 제목 수정")
-//    void update_title() throws Exception {
-//        // given
-//        Long boardId = 2L;
-//        UpdateBoardRequest boardRequest = new UpdateBoardRequest("제목", "안녕",
-//                "최성욱", Genre.ACTION);
-//        UpdateBoardResponse boardResponse = new UpdateBoardResponse(boardId, "새로운 제목", "안녕",
-//                "최성욱", 1L, 2L, Genre.ACTION);
-//        given(boardService.update(any(), any())).willReturn(boardResponse);
-//
-//        //when & than
-//        String writeValueAsString = objectMapper.writeValueAsString(boardRequest);
-//        mockMvc.perform(put("/api/boards/{boardId}", boardId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(writeValueAsString))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(2L))
-//                .andExpect(jsonPath("$.title").value("새로운 제목"))
-//                .andExpect(jsonPath("$.content").value("안녕"))
-//                .andExpect(jsonPath("$.author").value("최성욱"))
-//                .andExpect(jsonPath("$.likes").value(1L))
-//                .andExpect(jsonPath("$.dislikes").value(2L))
-//                .andExpect(jsonPath("$.genre").value("ACTION"))
-//                .andDo(print());
-//    }
-//
-//    @Test
-//    @DisplayName("게시글 내용 수정")
-//    void update_content() throws Exception {
-//        // given
-//        Long boardId = 3L;
-//        UpdateBoardRequest boardRequest = new UpdateBoardRequest("제목", "안녕",
-//                "최성욱", Genre.ACTION);
-//        UpdateBoardResponse boardResponse = new UpdateBoardResponse(boardId, "제목", "새로운 내용",
-//                "최성욱", 1L, 2L, Genre.ACTION);
-//        given(boardService.update(any(), any())).willReturn(boardResponse);
-//
-//        //when & than
-//        String writeValueAsString = objectMapper.writeValueAsString(boardRequest);
-//        mockMvc.perform(put("/api/boards/{boardId}", boardId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(writeValueAsString))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(3L))
-//                .andExpect(jsonPath("$.title").value("제목"))
-//                .andExpect(jsonPath("$.content").value("새로운 내용"))
-//                .andExpect(jsonPath("$.author").value("최성욱"))
-//                .andExpect(jsonPath("$.likes").value(1L))
-//                .andExpect(jsonPath("$.dislikes").value(2L))
-//                .andExpect(jsonPath("$.genre").value("ACTION"))
-//                .andDo(print());
-//    }
-//
-//    @Test
-//    @DisplayName("게시글 작성자 수정")
-//    void update_author() throws Exception {
-//        // given
-//        Long boardId = 4L;
-//        UpdateBoardRequest boardRequest = new UpdateBoardRequest("제목", "내용",
-//                "최성욱", Genre.ACTION);
-//        UpdateBoardResponse boardResponse = new UpdateBoardResponse(boardId, "제목", "내용",
-//                "새로운 작성자", 1L, 2L, Genre.ACTION);
-//        given(boardService.update(any(), any())).willReturn(boardResponse);
-//
-//        //when & than
-//        String writeValueAsString = objectMapper.writeValueAsString(boardRequest);
-//        mockMvc.perform(put("/api/boards/{boardId}", boardId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(writeValueAsString))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(4L))
-//                .andExpect(jsonPath("$.title").value("제목"))
-//                .andExpect(jsonPath("$.content").value("내용"))
-//                .andExpect(jsonPath("$.author").value("새로운 작성자"))
-//                .andExpect(jsonPath("$.likes").value(1L))
-//                .andExpect(jsonPath("$.dislikes").value(2L))
-//                .andExpect(jsonPath("$.genre").value("ACTION"))
-//                .andDo(print());
-//    }
-//
-//    @Test
-//    @DisplayName("게시글 장르 수정")
-//    void update_genre() throws Exception {
-//        // given
-//        Long boardId = 5L;
-//        UpdateBoardRequest boardRequest = new UpdateBoardRequest("제목", "안녕",
-//                "최성욱", Genre.ACTION);
-//        UpdateBoardResponse boardResponse = new UpdateBoardResponse(boardId, "제목", "새로운 내용",
-//                "최성욱", 1L, 2L, Genre.SF_FANTASY);
-//        given(boardService.update(any(), any())).willReturn(boardResponse);
-//
-//        //when & than
-//        String writeValueAsString = objectMapper.writeValueAsString(boardRequest);
-//        mockMvc.perform(put("/api/boards/{boardId}", boardId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(writeValueAsString))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(5L))
-//                .andExpect(jsonPath("$.title").value("제목"))
-//                .andExpect(jsonPath("$.content").value("새로운 내용"))
-//                .andExpect(jsonPath("$.author").value("최성욱"))
-//                .andExpect(jsonPath("$.likes").value(1L))
-//                .andExpect(jsonPath("$.dislikes").value(2L))
-//                .andExpect(jsonPath("$.genre").value("SF_FANTASY"))
-//                .andDo(print());
-//    }
-//
+
+    @Test
+    @DisplayName("게시글 수정")
+    void update() throws Exception {
+        // given
+        Long boardId = 1L;
+        UpdateBoardRequest boardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ETC);
+        UpdateBoardResponse boardResponse = new UpdateBoardResponse(
+                new BoardPayload(
+                        1L, "새로운 제목", "새로운 내용", 1L, 3L, ETC, 1L));
+        given(boardService.update(any(), any())).willReturn(boardResponse);
+
+        // when & then
+        String writeValueAsString = objectMapper.writeValueAsString(boardRequest);
+        mockMvc.perform(put("/api/boards/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writeValueAsString))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.boardPayload.id").value(1L))
+                .andExpect(jsonPath("$.boardPayload.title").value("새로운 제목"))
+                .andExpect(jsonPath("$.boardPayload.content").value("새로운 내용"))
+                .andExpect(jsonPath("$.boardPayload.likes").value(1L))
+                .andExpect(jsonPath("$.boardPayload.dislikes").value(3L))
+                .andExpect(jsonPath("$.boardPayload.movieType").value("ETC"))
+                .andDo(print());
+    }
+
 //    @Test
 //    @DisplayName("게시글 삭제")
 //    void deleted() throws Exception {
