@@ -168,21 +168,20 @@ class BoardServiceTest {
         // then
         assertThat(updateBoardResponse).usingRecursiveComparison().isEqualTo(expectedBoardResponse);
     }
-//
-//    @Test
-//    @DisplayName("게시글 삭제")
-//    void deleted() {
-//        // given
-//        Long boardId = 4L;
-//        given(boardRepository.findById(anyLong())).willReturn(Optional.of(Board.builder().build()));
-//        doNothing().when(boardRepository).delete(any());
-//
-//        // when
-//        boolean isDelete = boardService.deleted(boardId);
-//
-//        // then
-//        assertThat(isDelete).isTrue();
-//    }
-//
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void deleted() {
+        // given
+        Long boardId = new Random().nextLong();
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(Board.builder().build()));
+        doNothing().when(boardRepository).delete(any());
+
+        // when
+        boolean isDelete = boardService.deleted(boardId);
+
+        // then
+        assertThat(isDelete).isTrue();
+    }
 
 }
