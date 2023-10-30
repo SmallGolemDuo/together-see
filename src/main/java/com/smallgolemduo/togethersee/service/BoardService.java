@@ -4,6 +4,7 @@ import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
@@ -83,6 +84,25 @@ public class BoardService {
         board.addComments(comment);
         board = boardRepository.save(board);
         return CreateCommentResponse.from(CommentPayload.from(board.findLastComment()));
+    }
+
+    @Transactional
+    public UpdateCommentResponse updateComment(Long boardId, Long commentId, UpdateCommentRequest updateCommentRequest) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
+        Comment comment = board.getComments().stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()
+                .orElse(null);
+        if (comment == null) {
+            throw new IllegalArgumentException("해당하는 댓글이 없습니다.");
+        }
+        if (updateCommentRequest.getContent() != null) {
+            comment.setContent(updateCommentRequest.getContent());
+        }
+        board.addComments(comment);
+        board = boardRepository.save(board);
+        return UpdateCommentResponse.from(CommentPayload.from(board.findLastComment()));
     }
 
 }

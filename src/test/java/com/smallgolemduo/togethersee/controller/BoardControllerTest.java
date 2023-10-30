@@ -5,6 +5,7 @@ import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.service.BoardService;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.smallgolemduo.togethersee.entity.enums.MovieType.*;
@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -171,7 +170,7 @@ class BoardControllerTest {
 
     @Test
     @DisplayName("댓글 등록")
-    void CreateComment() throws Exception {
+    void createComment() throws Exception {
         // given
         Long boardId = new Random().nextLong();
         CreateCommentRequest createCommentRequest = new CreateCommentRequest(
@@ -188,6 +187,31 @@ class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.commentPayload.id").value(1L))
                 .andExpect(jsonPath("$.commentPayload.content").value("추천할게요"))
+                .andExpect(jsonPath("$.commentPayload.username").value("최성욱"))
+                .andExpect(jsonPath("$.commentPayload.boardId").value(boardId))
+                .andExpect(jsonPath("$.commentPayload.userId").value(1L))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 수정")
+    void updateComment() throws Exception {
+        // given
+        Long boardId = new Random().nextLong();
+        Long commentId = new Random().nextLong();
+        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("새롭게 재밌어");
+        UpdateCommentResponse updateCommentResponse = new UpdateCommentResponse(
+                new CommentPayload(commentId, "새롭게 재밌어", "최성욱", boardId, 1L));
+        given(boardService.updateComment(any(), any(), any())).willReturn(updateCommentResponse);
+
+        // when & then
+        String valueAsString = objectMapper.writeValueAsString(updateCommentRequest);
+        mockMvc.perform(put("/api/boards/{boardId}/comments/{commentId}", boardId, commentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(valueAsString))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.commentPayload.id").value(commentId))
+                .andExpect(jsonPath("$.commentPayload.content").value("새롭게 재밌어"))
                 .andExpect(jsonPath("$.commentPayload.username").value("최성욱"))
                 .andExpect(jsonPath("$.commentPayload.boardId").value(boardId))
                 .andExpect(jsonPath("$.commentPayload.userId").value(1L))

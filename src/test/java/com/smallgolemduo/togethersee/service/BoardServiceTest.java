@@ -5,6 +5,7 @@ import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.entity.Comment;
@@ -230,6 +231,47 @@ class BoardServiceTest {
 
         // then
         assertThat(createCommentResponse).usingRecursiveComparison().isEqualTo(expectedValue);
+    }
+
+    @Test
+    @DisplayName("댓글 수정")
+    void updateComment() {
+        // given
+        Long boardId = new Random().nextLong();
+        Long commentId = new Random().nextLong();
+        User user = User.builder()
+                .id(1L).username("최성욱").email("asd@naver.com")
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                .build();
+        Board tempBoard = Board.builder()
+                .id(boardId).title("제목입니다").content("내용입니다")
+                .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
+                .comments(new ArrayList<>(List.of(Comment.builder()
+                        .id(commentId).content("새롭게 재밌다").username("최성욱").userId(1L)
+                        .build())))
+                .build();
+        given(boardRepository.findById(any())).willReturn(ofNullable(tempBoard));
+
+        Board board = Board.builder()
+                .id(boardId).title("제목입니다").content("내용입니다")
+                .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
+                .comments(List.of(Comment.builder()
+                        .id(commentId).content("추천할게요").username("최성욱").board(tempBoard).userId(1L)
+                        .build()))
+                .build();
+        given(boardRepository.save(any())).willReturn(board);
+
+        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("추천할게요.");
+        UpdateCommentResponse expectedValue = UpdateCommentResponse.from(CommentPayload.from(
+                Comment.builder()
+                        .id(commentId).content("추천할게요").username("최성욱").board(board).userId(1L)
+                        .build()));
+
+        // when
+        UpdateCommentResponse updateCommentResponse = boardService.updateComment(boardId, commentId, updateCommentRequest);
+
+        // then
+        assertThat(updateCommentResponse).usingRecursiveComparison().isEqualTo(expectedValue);
     }
 
 }
