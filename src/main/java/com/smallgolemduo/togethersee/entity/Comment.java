@@ -15,16 +15,19 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String content;
-    private String author;
+
+    private String username;
+
     private Long userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public void registerComment(String username, Long userId, Board bo) {
-
-
+    public void addUsername(String username) {
+        this.username = username;
     }
 
 }

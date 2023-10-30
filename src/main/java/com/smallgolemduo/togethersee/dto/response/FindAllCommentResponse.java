@@ -15,13 +15,13 @@ public class FindAllCommentResponse {
 
     private Long id;
     private String content;
-    private String author;
+    private String username;
 
     public static FindAllCommentResponse from(Comment comment) {
         return FindAllCommentResponse.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .author(comment.getAuthor())
+                .username(comment.getUsername())
                 .build();
     }
 

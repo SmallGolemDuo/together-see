@@ -1,11 +1,14 @@
 package com.smallgolemduo.togethersee.service;
 
 import com.smallgolemduo.togethersee.dto.BoardPayload;
+import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
+import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
+import com.smallgolemduo.togethersee.entity.Comment;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,6 +71,18 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
         boardRepository.delete(board);
         return true;
+    }
+
+    @Transactional
+    public CreateCommentResponse createComment(Long id, CreateCommentRequest createCommentRequest) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
+        UserPayload userPayload = userService.findById(createCommentRequest.getUserId());
+        Comment comment = createCommentRequest.toEntity();
+        comment.addUsername(userPayload.getUsername());
+        board.addComments(comment);
+        board = boardRepository.save(board);
+        return CreateCommentResponse.from(CommentPayload.from(board.findLastComment()));
     }
 
 }

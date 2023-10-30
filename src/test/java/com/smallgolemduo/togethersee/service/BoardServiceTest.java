@@ -1,15 +1,15 @@
 package com.smallgolemduo.togethersee.service;
 
 import com.smallgolemduo.togethersee.dto.BoardPayload;
+import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
-import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
-import com.smallgolemduo.togethersee.dto.response.FindAllBoardResponse;
+import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
+import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
+import com.smallgolemduo.togethersee.entity.Comment;
 import com.smallgolemduo.togethersee.entity.User;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
-import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
-import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.smallgolemduo.togethersee.entity.enums.MovieType.*;
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -93,7 +95,7 @@ class BoardServiceTest {
                         .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
                         .build())
                 .build();
-        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
+        given(boardRepository.findById(any())).willReturn(ofNullable(board));
 
         FindByIdBoardResponse expectedValue = FindByIdBoardResponse.from(BoardPayload.from(
                 Board.builder()
@@ -121,8 +123,8 @@ class BoardServiceTest {
                 .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
                 .build();
         List<Board> boards = List.of(
-                new Board(1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, user),
-                new Board(2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, user));
+                new Board(1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, user, List.of()),
+                new Board(2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, user, List.of()));
         List<FindAllBoardResponse> expectedValue = List.of(
                 new FindAllBoardResponse(List.of(
                         new BoardPayload(1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, 1L))),
@@ -150,7 +152,7 @@ class BoardServiceTest {
                 .id(boardId).title("제목입니다").content("내용입니다")
                 .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
                 .build();
-        given(boardRepository.findById(any())).willReturn(Optional.ofNullable(board));
+        given(boardRepository.findById(any())).willReturn(ofNullable(board));
 
         Board updateBoard = Board.builder()
                 .id(boardId).title("새로운 제목").content("새로운 내용")
@@ -182,6 +184,52 @@ class BoardServiceTest {
 
         // then
         assertThat(isDelete).isTrue();
+    }
+
+    @Test
+    @DisplayName("댓글 등록")
+    void createComment() {
+        // given
+        Long boardId = new Random().nextLong();
+        User user = User.builder()
+                .id(1L).username("최성욱").email("asd@naver.com")
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                .build();
+        Board tempBoard = Board.builder()
+                .id(boardId).title("제목입니다").content("내용입니다")
+                .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
+                .comments(new ArrayList<>())
+                .build();
+        given(boardRepository.findById(any())).willReturn(ofNullable(tempBoard));
+
+        UserPayload userPayload = UserPayload.builder()
+                .id(1L).username("최성욱").email("asd@naver.com")
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").board(List.of())
+                .build();
+        given(userService.findById(any())).willReturn(userPayload);
+
+        Board board = Board.builder()
+                .id(boardId).title("제목입니다").content("내용입니다")
+                .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
+                .comments(List.of(Comment.builder()
+                        .id(1L).content("추천할게요").username("최성욱").board(tempBoard).userId(1L)
+                        .build()))
+                .build();
+        given(boardRepository.save(any())).willReturn(board);
+
+        CreateCommentResponse expectedValue = CreateCommentResponse.from(CommentPayload.from(
+                Comment.builder()
+                        .id(1L).content("추천할게요").username("최성욱").board(board).userId(1L)
+                        .build()));
+
+        // when
+        CreateCommentResponse createCommentResponse = boardService.createComment(boardId, CreateCommentRequest.builder()
+                .content("추천할게요")
+                .userId(1L)
+                .build());
+
+        // then
+        assertThat(createCommentResponse).usingRecursiveComparison().isEqualTo(expectedValue);
     }
 
 }

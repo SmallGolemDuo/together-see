@@ -1,13 +1,11 @@
 package com.smallgolemduo.togethersee.controller;
 
 import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
-import com.smallgolemduo.togethersee.dto.response.FindByIdCommentResponse;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
-import com.smallgolemduo.togethersee.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,11 +56,12 @@ public class BoardController {
         return boardService.deleted(id);
     }
 
-//    @PostMapping("/{boardId}/comments")
-//    public CreateCommentResponse createComment(@PathVariable("boardId") Long id,
-//                                               @RequestBody @Valid CreateCommentRequest createCommentRequest) {
-//        return commentService.createComment(id, createCommentRequest);
-//    }
+    @PostMapping("/{boardId}/comments")
+    public CreateCommentResponse createComment(@PathVariable("boardId") Long id,
+                                               @RequestBody @Valid CreateCommentRequest createCommentRequest) {
+        return boardService.createComment(id, createCommentRequest);
+    }
+
 //
 //    @GetMapping("/{boardId}/comments/{commentId}")
 //    public FindByIdCommentResponse findByIdComment(@PathVariable("boardId") Long id,

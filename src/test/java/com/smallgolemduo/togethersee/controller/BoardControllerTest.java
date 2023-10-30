@@ -2,12 +2,11 @@ package com.smallgolemduo.togethersee.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smallgolemduo.togethersee.dto.BoardPayload;
+import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
-import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
+import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
+import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
-import com.smallgolemduo.togethersee.dto.response.FindAllBoardResponse;
-import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
-import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -168,6 +167,31 @@ class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
         verify(boardService).deleted(boardId);
+    }
+
+    @Test
+    @DisplayName("댓글 등록")
+    void CreateComment() throws Exception {
+        // given
+        Long boardId = new Random().nextLong();
+        CreateCommentRequest createCommentRequest = new CreateCommentRequest(
+                "추천할게요", 1L);
+        CreateCommentResponse createCommentResponse = new CreateCommentResponse(
+                new CommentPayload(1L, "추천할게요", "최성욱", boardId, 1L));
+        given(boardService.createComment(any(), any())).willReturn(createCommentResponse);
+
+        // when & then
+        String valueAsString = objectMapper.writeValueAsString(createCommentRequest);
+        mockMvc.perform(post("/api/boards/{boardId}/comments", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(valueAsString))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.commentPayload.id").value(1L))
+                .andExpect(jsonPath("$.commentPayload.content").value("추천할게요"))
+                .andExpect(jsonPath("$.commentPayload.username").value("최성욱"))
+                .andExpect(jsonPath("$.commentPayload.boardId").value(boardId))
+                .andExpect(jsonPath("$.commentPayload.userId").value(1L))
+                .andDo(print());
     }
 
 }
