@@ -1,25 +1,19 @@
 package com.smallgolemduo.togethersee.dto.response;
 
-import com.smallgolemduo.togethersee.entity.Board;
-import com.smallgolemduo.togethersee.entity.Comment;
+import com.smallgolemduo.togethersee.dto.CommentPayload;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCommentResponse {
 
-    private Long id;
-    private String content;
-    private String author;
+    private CommentPayload commentPayload;
 
-    public static CreateCommentResponse from(Comment comment) {
+    public static CreateCommentResponse from(CommentPayload commentPayload) {
         return CreateCommentResponse.builder()
-                .id(comment.getId())
-                .content(comment.getContent())
-                .author(comment.getUserId().toString())
+                .commentPayload(commentPayload)
                 .build();
     }
 
