@@ -1,10 +1,8 @@
 package com.smallgolemduo.togethersee.controller;
 
-import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
-import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.*;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.dto.response.FindByIdBoardResponse;
-import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.CreateBoardResponse;
 import com.smallgolemduo.togethersee.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import com.smallgolemduo.togethersee.dto.response.FindAllBoardResponse;
 
 import java.util.List;
 
-import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.dto.response.UpdateBoardResponse;
 
 import javax.validation.Valid;
@@ -69,6 +66,13 @@ public class BoardController {
                                                @PathVariable("commentId") Long commentId,
                                                @RequestBody @Valid UpdateCommentRequest updateCommentRequest) {
         return boardService.updateComment(id, commentId, updateCommentRequest);
+    }
+
+    @DeleteMapping("/{boardId}/comments/{commentId}")
+    public boolean deleteComment(@PathVariable("boardId") Long boardId,
+                                 @PathVariable("commentId") Long commentId,
+                                 @RequestBody DeleteCommentRequest deleteCommentRequest) {
+        return boardService.deleteComment(boardId, commentId, deleteCommentRequest);
     }
 
 }

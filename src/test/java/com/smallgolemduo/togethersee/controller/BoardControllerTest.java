@@ -3,11 +3,8 @@ package com.smallgolemduo.togethersee.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.CommentPayload;
-import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
-import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
-import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.*;
 import com.smallgolemduo.togethersee.dto.response.*;
-import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.smallgolemduo.togethersee.entity.enums.MovieType.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -28,11 +26,10 @@ import java.util.Random;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BoardController.class)
 class BoardControllerTest {
@@ -215,6 +212,23 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.commentPayload.username").value("최성욱"))
                 .andExpect(jsonPath("$.commentPayload.boardId").value(boardId))
                 .andExpect(jsonPath("$.commentPayload.userId").value(1L))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 삭제")
+    void deleteComment() throws Exception {
+        // given
+        DeleteCommentRequest deleteCommentRequest = new DeleteCommentRequest(2L);
+        given(boardService.deleteComment(any(), any(), any())).willReturn(true);
+
+        // when & then
+        String valueAsString = objectMapper.writeValueAsString(deleteCommentRequest);
+        mockMvc.perform(delete("/api/boards/{boardId}/comments/{commentId}", 1L, 2L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(valueAsString))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(true)))
                 .andDo(print());
     }
 
