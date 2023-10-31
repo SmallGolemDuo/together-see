@@ -3,12 +3,9 @@ package com.smallgolemduo.togethersee.service;
 import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
-import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
-import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.*;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
-import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
-import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.entity.Comment;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -103,6 +100,20 @@ public class BoardService {
         board.addComments(comment);
         board = boardRepository.save(board);
         return UpdateCommentResponse.from(CommentPayload.from(board.findLastComment()));
+    }
+
+    @Transactional
+    public boolean deleteComment(Long boardId, Long commentId, DeleteCommentRequest deleteCommentRequest) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
+        boolean isComment = board.getComments().stream()
+                .anyMatch(c -> c.getId().equals(commentId) && c.getUserId().equals(deleteCommentRequest.getUserId()));
+        if (!isComment) {
+            throw new IllegalArgumentException("해당하는 댓글이 없거나 댓글을 작성한 사용자가 아닙니다.");
+        }
+        board.getComments().removeIf(c -> c.getId().equals(commentId));
+        boardRepository.save(board);
+        return true;
     }
 
 }
