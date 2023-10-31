@@ -94,6 +94,11 @@ public class BoardService {
         if (comment == null) {
             throw new IllegalArgumentException("해당하는 댓글이 없습니다.");
         }
+        boolean isUserId = board.getComments().stream()
+                .anyMatch(c -> c.getUserId().equals(updateCommentRequest.getUserId()));
+        if (!isUserId) {
+            throw new IllegalArgumentException("댓글을 작성한 유저가 아닙니다.");
+        }
         if (updateCommentRequest.getContent() != null) {
             comment.setContent(updateCommentRequest.getContent());
         }
