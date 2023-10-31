@@ -196,7 +196,7 @@ class BoardControllerTest {
         // given
         Long boardId = new Random().nextLong();
         Long commentId = new Random().nextLong();
-        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("새롭게 재밌어");
+        UpdateCommentRequest updateCommentRequest =new UpdateCommentRequest("새롭게 재밌어", 1L);
         UpdateCommentResponse updateCommentResponse = new UpdateCommentResponse(
                 new CommentPayload(commentId, "새롭게 재밌어", "최성욱", boardId, 1L));
         given(boardService.updateComment(any(), any(), any())).willReturn(updateCommentResponse);

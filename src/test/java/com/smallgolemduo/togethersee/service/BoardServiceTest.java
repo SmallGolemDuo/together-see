@@ -258,7 +258,7 @@ class BoardServiceTest {
                 .build();
         given(boardRepository.save(any())).willReturn(board);
 
-        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("추천할게요.");
+        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("추천할게요.", 1L);
         UpdateCommentResponse expectedValue = UpdateCommentResponse.from(CommentPayload.from(
                 Comment.builder()
                         .id(commentId).content("추천할게요").username("최성욱").board(board).userId(1L)
