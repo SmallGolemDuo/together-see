@@ -3,14 +3,11 @@ package com.smallgolemduo.togethersee.service;
 import com.smallgolemduo.togethersee.dto.BoardPayload;
 import com.smallgolemduo.togethersee.dto.CommentPayload;
 import com.smallgolemduo.togethersee.dto.UserPayload;
-import com.smallgolemduo.togethersee.dto.request.CreateBoardRequest;
-import com.smallgolemduo.togethersee.dto.request.CreateCommentRequest;
-import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
+import com.smallgolemduo.togethersee.dto.request.*;
 import com.smallgolemduo.togethersee.dto.response.*;
 import com.smallgolemduo.togethersee.entity.Board;
 import com.smallgolemduo.togethersee.entity.Comment;
 import com.smallgolemduo.togethersee.entity.User;
-import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import com.smallgolemduo.togethersee.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -272,6 +269,42 @@ class BoardServiceTest {
 
         // then
         assertThat(updateCommentResponse).usingRecursiveComparison().isEqualTo(expectedValue);
+    }
+
+    @Test
+    @DisplayName("댓글 삭제")
+    void deleteComment() {
+        // given
+        Long boardId = new Random().nextLong();
+        Long commentId = new Random().nextLong();
+        User user = User.builder()
+                .id(1L).username("최성욱").email("asd@gmail.com")
+                .password("1234").birth("950928").phoneNumber("010-1234-1234")
+                .boards(List.of())
+                .build();
+        Board tempBoard = Board.builder()
+                .id(boardId).title("극한직업").content("재밌다")
+                .likes(1L).dislikes(1L).movieType(DRAMA_DOCUMENTARY)
+                .user(user).comments(new ArrayList<>(List.of(Comment.builder()
+                        .id(commentId).content("추천할게요").username("최성욱").userId(1L)
+                        .build())))
+                .build();
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(tempBoard));
+
+        Board board = Board.builder()
+                .id(boardId).title("극한직업").content("재밌다")
+                .likes(1L).dislikes(1L).movieType(DRAMA_DOCUMENTARY)
+                .user(user).comments(new ArrayList<>(List.of(Comment.builder()
+                        .id(commentId).content("추천할게요").username("최성욱").userId(1L)
+                        .build())))
+                .build();
+        given(boardRepository.save(any())).willReturn(board);
+
+        // when
+        boolean isDelete = boardService.deleteComment(boardId, commentId, new DeleteCommentRequest(1L));
+
+        // then
+        assertThat(isDelete).isTrue();
     }
 
 }
