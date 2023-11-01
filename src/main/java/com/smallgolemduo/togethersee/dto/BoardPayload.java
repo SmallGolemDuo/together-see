@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -20,6 +23,7 @@ public class BoardPayload {
     private Long dislikes;
     private MovieType movieType;
     private Long userId;
+    private List<CommentPayload> commentPayloads;
 
     public static BoardPayload from(Board board) {
         return BoardPayload.builder()
@@ -30,6 +34,9 @@ public class BoardPayload {
                 .dislikes(board.getDislikes())
                 .movieType(board.getMovieType())
                 .userId(board.getUser().getId())
+                .commentPayloads(board.getComments().stream()
+                        .map(CommentPayload::from)
+                        .collect(Collectors.toList()))
                 .build();
     }
 

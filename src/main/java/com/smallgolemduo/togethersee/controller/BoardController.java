@@ -34,8 +34,8 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public FindByIdBoardResponse findById(@PathVariable("boardId") Long id) {
-        return boardService.findById(id);
+    public FindByIdBoardResponse findById(@PathVariable("boardId") Long boardId) {
+        return boardService.findById(boardId);
     }
 
     @GetMapping
@@ -59,7 +59,6 @@ public class BoardController {
                                                @RequestBody @Valid CreateCommentRequest createCommentRequest) {
         return boardService.createComment(id, createCommentRequest);
     }
-
 
     @PutMapping("/{boardId}/comments/{commentId}")
     public UpdateCommentResponse updateComment(@PathVariable("boardId") Long id,
