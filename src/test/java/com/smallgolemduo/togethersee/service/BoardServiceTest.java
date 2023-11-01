@@ -27,6 +27,7 @@ import static org.mockito.BDDMockito.given;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -48,26 +49,46 @@ class BoardServiceTest {
     void create() {
         // given
         UserPayload userPayload = UserPayload.builder()
-                .id(1L).username("성욱").email("asd@naver.com")
-                .password("1234").birth("950928").phoneNumber("010-1234-1234").board(List.of())
+                .id(1L).username("성욱")
+                .email("asd@naver.com").password("1234")
+                .birth("950928").phoneNumber("010-1234-1234")
+                .board(List.of())
                 .build();
         given(userService.findById(any())).willReturn(userPayload);
 
-        Board board = Board.builder()
-                .id(1L).title("이거 재밌네").content("극한직업").likes(1L)
-                .dislikes(1L).movieType(ROMANCE_COMEDY).user(userPayload.toEntity())
+        Board tempBoard = Board.builder()
+                .id(1L).title("이거 재밌네")
+                .content("극한직업").likes(1L)
+                .dislikes(1L).movieType(ROMANCE_COMEDY)
+                .user(userPayload.toEntity())
+                .comments(new ArrayList<>())
                 .build();
-        given(boardRepository.save(any())).willReturn(board);
+        tempBoard.addComments(Comment.builder()
+                .content("추천해요")
+                .userId(1L)
+                .build());
+        given(boardRepository.save(any())).willReturn(tempBoard);
 
-        CreateBoardResponse expectedValue = CreateBoardResponse.from(BoardPayload.from(
-                Board.builder()
-                        .id(1L).title("이거 재밌네").content("극한직업").likes(1L)
-                        .dislikes(1L).movieType(ROMANCE_COMEDY)
-                        .user(User.builder()
-                                .id(1L).username("성욱").email("asd@naver.com")
-                                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
-                                .build())
-                        .build()));
+        Board board = Board.builder()
+                .id(1L)
+                .title("이거 재밌네")
+                .content("극한직업")
+                .likes(1L)
+                .dislikes(1L)
+                .movieType(ROMANCE_COMEDY)
+                .user(User.builder()
+                        .id(1L).username("성욱")
+                        .email("asd@naver.com").password("1234")
+                        .birth("950928").phoneNumber("010-1234-1234")
+                        .boards(List.of())
+                        .build())
+                .comments(new ArrayList<>())
+                .build();
+        board.addComments(Comment.builder()
+                .content("추천해요")
+                .userId(1L)
+                .build());
+        CreateBoardResponse expectedValue = CreateBoardResponse.from(BoardPayload.from(board));
 
         // when
         CreateBoardResponse resultValue = boardService.create(CreateBoardRequest.builder()
@@ -82,28 +103,33 @@ class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 조회")
+    @DisplayName("게시글 상세 조회")
     void findById() {
         // given
         Long boardId = new Random().nextLong();
         Board board = Board.builder()
-                .id(boardId).title("이거 재밌네").content("극한직업").likes(1L)
-                .dislikes(1L).movieType(ROMANCE_COMEDY).user(User.builder()
-                        .id(1L).username("성욱").email("asd@naver.com")
-                        .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                .id(boardId)
+                .title("이거 재밌네")
+                .content("극한직업")
+                .likes(1L)
+                .dislikes(1L)
+                .movieType(ROMANCE_COMEDY)
+                .user(User.builder()
+                        .id(1L).username("성욱")
+                        .email("asd@naver.com").password("1234")
+                        .birth("950928").phoneNumber("010-1234-1234")
+                        .boards(new ArrayList<>())
                         .build())
+                .comments(new ArrayList<>())
                 .build();
-        given(boardRepository.findById(any())).willReturn(ofNullable(board));
+        board.addComments(Comment.builder().content("짱 재밌네").userId(1L).build());
+        given(boardRepository.findById(any())).willReturn(Optional.of(board));
 
-        FindByIdBoardResponse expectedValue = FindByIdBoardResponse.from(BoardPayload.from(
-                Board.builder()
-                        .id(boardId).title("이거 재밌네").content("극한직업").likes(1L)
-                        .dislikes(1L).movieType(ROMANCE_COMEDY)
-                        .user(User.builder()
-                                .id(1L).username("성욱").email("asd@naver.com")
-                                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
-                                .build())
-                        .build()));
+        FindByIdBoardResponse expectedValue = FindByIdBoardResponse.from(
+                new BoardPayload(boardId, "이거 재밌네", "극한직업", 1L, 1L, ROMANCE_COMEDY, 1L,
+                        board.getComments().stream()
+                                .map(CommentPayload::from)
+                                .collect(Collectors.toList())));
 
         // when
         FindByIdBoardResponse findByIdBoardResponse = boardService.findById(boardId);
@@ -125,9 +151,11 @@ class BoardServiceTest {
                 new Board(2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, user, List.of()));
         List<FindAllBoardResponse> expectedValue = List.of(
                 new FindAllBoardResponse(List.of(
-                        new BoardPayload(1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, 1L))),
+                        new BoardPayload(
+                                1L, "제목1", "내용1", 1L, 2L, ROMANCE_COMEDY, 1L, List.of()))),
                 new FindAllBoardResponse(List.of(
-                        new BoardPayload(2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, 1L))));
+                        new BoardPayload(
+                                2L, "제목2", "내용2", 2L, 3L, ROMANCE_COMEDY, 1L, List.of()))));
         given(boardRepository.findAll()).willReturn(boards);
 
         // when
@@ -160,7 +188,9 @@ class BoardServiceTest {
         UpdateBoardRequest updateBoardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ACTION);
         UpdateBoardResponse expectedBoardResponse = new UpdateBoardResponse(
                 new BoardPayload(boardId, "새로운 제목", "새로운 내용", 1L, 2L,
-                        ACTION, 1L));
+                        ACTION, 1L, List.of(new CommentPayload(
+                        1L, "새로운 제목", "새로운 내용", boardId, 1L
+                ))));
 
         // when
         UpdateBoardResponse updateBoardResponse = boardService.update(boardId, updateBoardRequest);
