@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.smallgolemduo.togethersee.entity.enums.MovieType.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -50,7 +49,7 @@ class BoardControllerTest {
         CreateBoardRequest createBoardRequest = new CreateBoardRequest(
                 "안녕하세요", "최성욱입니다", ACTION, 1L);
         BoardPayload boardPayload = new BoardPayload(
-                1L, "안녕하세요", "최성욱입니다", 0L, 1L, ACTION, 1L);
+                1L, "안녕하세요", "최성욱입니다", 0L, 1L, ACTION, 1L, List.of());
         CreateBoardResponse createBoardResponse = new CreateBoardResponse(boardPayload);
         given(boardService.create(any())).willReturn(createBoardResponse);
 
@@ -99,9 +98,9 @@ class BoardControllerTest {
         // given
         List<FindAllBoardResponse> findAllBoardResponses = List.of(
                 new FindAllBoardResponse(List.of(
-                        new BoardPayload(1L, "출첵", "재밌다", 1L, 0L, ETC, 1L))),
+                        new BoardPayload(1L, "출첵", "재밌다", 1L, 0L, ETC, 1L, List.of()))),
                 new FindAllBoardResponse(List.of(
-                        new BoardPayload(2L, "출첵2", "재밌더라", 10L, 1L, ETC, 1L))));
+                        new BoardPayload(2L, "출첵2", "재밌더라", 10L, 1L, ETC, 1L, List.of()))));
         given(boardService.findAll()).willReturn(findAllBoardResponses);
 
         // when & then
@@ -133,7 +132,7 @@ class BoardControllerTest {
         UpdateBoardRequest boardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ETC);
         UpdateBoardResponse boardResponse = new UpdateBoardResponse(
                 new BoardPayload(
-                        1L, "새로운 제목", "새로운 내용", 1L, 3L, ETC, 1L));
+                        1L, "새로운 제목", "새로운 내용", 1L, 3L, ETC, 1L,List.of()));
         given(boardService.update(any(), any())).willReturn(boardResponse);
 
         // when & then
@@ -196,7 +195,7 @@ class BoardControllerTest {
         // given
         Long boardId = new Random().nextLong();
         Long commentId = new Random().nextLong();
-        UpdateCommentRequest updateCommentRequest =new UpdateCommentRequest("새롭게 재밌어", 1L);
+        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("새롭게 재밌어", 1L);
         UpdateCommentResponse updateCommentResponse = new UpdateCommentResponse(
                 new CommentPayload(commentId, "새롭게 재밌어", "최성욱", boardId, 1L));
         given(boardService.updateComment(any(), any(), any())).willReturn(updateCommentResponse);

@@ -32,8 +32,8 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public FindByIdBoardResponse findById(Long id) {
-        Board board = boardRepository.findById(id)
+    public FindByIdBoardResponse findById(Long boardId) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
         return FindByIdBoardResponse.from(BoardPayload.from(board));
     }
