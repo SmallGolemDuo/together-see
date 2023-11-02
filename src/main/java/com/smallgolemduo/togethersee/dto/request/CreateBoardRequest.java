@@ -7,6 +7,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 
 @Getter
 @Builder
@@ -36,6 +37,7 @@ public class CreateBoardRequest {
                 .likes(DEFAULT_VALUE)
                 .dislikes(DEFAULT_VALUE)
                 .movieType(this.movieType)
+                .comments(new ArrayList<>())
                 .build();
     }
 
