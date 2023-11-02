@@ -1,5 +1,6 @@
 package com.smallgolemduo.togethersee.entity;
 
+import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
 import com.smallgolemduo.togethersee.entity.enums.MovieType;
 import lombok.*;
 
@@ -50,6 +51,19 @@ public class Board {
             return null;
         }
         return comments.get(comments.size() - LAST_COMMENT_DEFAULT_VALUE);
+    }
+
+    public Comment findCommentId(Long commentId) {
+        return this.comments.stream()
+                .filter(comment -> comment.getId().equals(commentId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean isCommentUserId(UpdateCommentRequest updateCommentRequest){
+          return this.comments.stream()
+                .anyMatch(comment -> comment.getUserId()
+                        .equals(updateCommentRequest.getUserId()));
     }
 
 }

@@ -87,16 +87,11 @@ public class BoardService {
     public UpdateCommentResponse updateComment(Long boardId, Long commentId, UpdateCommentRequest updateCommentRequest) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
-        Comment comment = board.getComments().stream()
-                .filter(c -> c.getId().equals(commentId))
-                .findFirst()
-                .orElse(null);
+        Comment comment = board.findCommentId(commentId);
         if (comment == null) {
-            throw new IllegalArgumentException("해당하는 댓글이 없습니다.");
+            throw new IllegalArgumentException("작성된 댓글이 없습니다.");
         }
-        boolean isUserId = board.getComments().stream()
-                .anyMatch(c -> c.getUserId().equals(updateCommentRequest.getUserId()));
-        if (!isUserId) {
+        if (!board.isCommentUserId(updateCommentRequest)) {
             throw new IllegalArgumentException("댓글을 작성한 유저가 아닙니다.");
         }
         if (updateCommentRequest.getContent() != null) {
