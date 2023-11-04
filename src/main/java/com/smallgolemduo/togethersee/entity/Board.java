@@ -60,7 +60,7 @@ public class Board {
                 .orElse(null);
     }
 
-    public boolean isCommentUserId(UpdateCommentRequest updateCommentRequest){
+    public boolean isUserIdByComments(UpdateCommentRequest updateCommentRequest){
           return this.comments.stream()
                 .anyMatch(comment -> comment.getUserId()
                         .equals(updateCommentRequest.getUserId()));

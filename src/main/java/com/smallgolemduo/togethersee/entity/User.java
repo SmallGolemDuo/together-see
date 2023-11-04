@@ -2,6 +2,7 @@ package com.smallgolemduo.togethersee.entity;
 
 import javax.persistence.*;
 
+import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +34,11 @@ public class User {
     public void modifyUserInfo(String password, String phoneNumber) {
         this.password = password;
         this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isUserIdByBoard(UpdateBoardRequest updateBoardRequest) {
+        return this.boards.stream()
+                .anyMatch(board -> board.getUser().getId().equals(updateBoardRequest.getUserId()));
     }
 
 }

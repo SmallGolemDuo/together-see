@@ -44,9 +44,9 @@ public class BoardController {
     }
 
     @PutMapping("/{boardId}")
-    public UpdateBoardResponse update(@PathVariable("boardId") Long id,
+    public UpdateBoardResponse update(@PathVariable("boardId") Long boardId,
                                       @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
-        return boardService.update(id, updateBoardRequest);
+        return boardService.update(boardId, updateBoardRequest);
     }
 
     @DeleteMapping("/{boardId}")
