@@ -63,6 +63,7 @@ public class BoardService {
         if (updateBoardRequest.getMovieType() != null) {
             board.setMovieType(updateBoardRequest.getMovieType());
         }
+        board.getUser().addBoards(board);
         return UpdateBoardResponse.from(BoardPayload.from(boardRepository.save(board)));
     }
 
