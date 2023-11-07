@@ -219,12 +219,14 @@ class BoardControllerTest {
     @DisplayName("댓글 삭제")
     void deleteComment() throws Exception {
         // given
-        DeleteCommentRequest deleteCommentRequest = new DeleteCommentRequest(2L);
+        Long userId = new Random().nextLong();
+        Long boardId = new Random().nextLong();
+        DeleteCommentRequest deleteCommentRequest = new DeleteCommentRequest(userId);
         given(boardService.deleteComment(any(), any(), any())).willReturn(true);
 
         // when & then
         String valueAsString = objectMapper.writeValueAsString(deleteCommentRequest);
-        mockMvc.perform(delete("/api/boards/{boardId}/comments/{commentId}", 1L, 2L)
+        mockMvc.perform(delete("/api/boards/{boardId}/comments/{commentId}", boardId, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(valueAsString))
                 .andExpect(status().isOk())
