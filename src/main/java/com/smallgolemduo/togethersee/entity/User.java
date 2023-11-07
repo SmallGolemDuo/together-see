@@ -2,6 +2,7 @@ package com.smallgolemduo.togethersee.entity;
 
 import javax.persistence.*;
 
+import com.smallgolemduo.togethersee.dto.request.UpdateBoardRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +31,19 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
 
+    public void addBoards(Board board) {
+        board.setUser(this);
+        this.boards.add(board);
+    }
+
     public void modifyUserInfo(String password, String phoneNumber) {
         this.password = password;
         this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isUserIdByBoard(UpdateBoardRequest updateBoardRequest) {
+        return this.boards.stream()
+                .anyMatch(board -> board.getUser().getId().equals(updateBoardRequest.getUserId()));
     }
 
 }

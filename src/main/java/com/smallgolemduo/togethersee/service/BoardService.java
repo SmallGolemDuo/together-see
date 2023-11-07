@@ -48,9 +48,12 @@ public class BoardService {
     }
 
     @Transactional
-    public UpdateBoardResponse update(Long id, UpdateBoardRequest updateBoardRequest) {
-        Board board = boardRepository.findById(id)
+    public UpdateBoardResponse update(Long boardId, UpdateBoardRequest updateBoardRequest) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
+        if (!board.getUser().isUserIdByBoard(updateBoardRequest)) {
+            throw new IllegalArgumentException("게시글 수정에 대한 권한이 없습니다.");
+        }
         if (updateBoardRequest.getTitle() != null) {
             board.setTitle(updateBoardRequest.getTitle());
         }
@@ -60,6 +63,7 @@ public class BoardService {
         if (updateBoardRequest.getMovieType() != null) {
             board.setMovieType(updateBoardRequest.getMovieType());
         }
+        board.getUser().addBoards(board);
         return UpdateBoardResponse.from(BoardPayload.from(boardRepository.save(board)));
     }
 
@@ -91,8 +95,8 @@ public class BoardService {
         if (comment == null) {
             throw new IllegalArgumentException("작성된 댓글이 없습니다.");
         }
-        if (!board.isCommentUserId(updateCommentRequest)) {
-            throw new IllegalArgumentException("댓글을 작성한 유저가 아닙니다.");
+        if (!board.isUserIdByComments(updateCommentRequest)) {
+            throw new IllegalArgumentException("댓글 수정에 대한 권한이 없습니다.");
         }
         if (updateCommentRequest.getContent() != null) {
             comment.setContent(updateCommentRequest.getContent());

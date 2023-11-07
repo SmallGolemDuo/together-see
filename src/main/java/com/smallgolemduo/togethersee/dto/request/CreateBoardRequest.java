@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class CreateBoardRequest {
 
-    private static final Long DEFAULT_VALUE = 0L;
+    public static final Long DEFAULT_VALUE = 0L;
 
     @NotBlank(message = "제목은 필수 입력 항목 입니다.")
     @Size(min = 2, max = 50, message = "제목은 2-50자 사이입니다.")
@@ -25,9 +25,10 @@ public class CreateBoardRequest {
     @Size(min = 2, max = 200, message = "제목은 2-200자 사이입니다.")
     private String content;
 
-    @NotNull(message = "장르는 필수 항목 입니다.")
+    @NotNull(message = "장르 선택은 필수 항목 입니다.")
     private MovieType movieType;
 
+    @NotNull(message = "사용자 ID 는 null 일 수 없습니다.")
     private Long userId;
 
     public Board toEntity() {

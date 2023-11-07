@@ -52,7 +52,7 @@ class BoardServiceTest {
                 .id(1L).username("성욱")
                 .email("asd@naver.com").password("1234")
                 .birth("950928").phoneNumber("010-1234-1234")
-                .board(List.of())
+                .boardPayloads(List.of())
                 .build();
         given(userService.findById(any())).willReturn(userPayload);
 
@@ -172,28 +172,33 @@ class BoardServiceTest {
         Long boardId = new Random().nextLong();
         User user = User.builder()
                 .id(1L).username("성욱").email("asd@naver.com")
-                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(List.of())
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").boards(new ArrayList<>())
                 .build();
-        Board board = Board.builder()
+        Board tempBoard = Board.builder()
                 .id(boardId).title("제목입니다").content("내용입니다")
                 .likes(1L).dislikes(2L).movieType(DRAMA_DOCUMENTARY).user(user)
+                .comments(List.of())
                 .build();
-        given(boardRepository.findById(any())).willReturn(ofNullable(board));
+        given(boardRepository.findById(any())).willReturn(ofNullable(tempBoard));
 
         Board updateBoard = Board.builder()
                 .id(boardId).title("새로운 제목").content("새로운 내용")
                 .likes(1L).dislikes(2L).movieType(ACTION).user(user)
+                .comments(List.of())
                 .build();
+        user.addBoards(updateBoard);
+        UpdateBoardResponse expectedBoardResponse = new UpdateBoardResponse(BoardPayload.from(
+                Board.builder()
+                        .id(boardId).title("새로운 제목").content("새로운 내용")
+                        .likes(1L).dislikes(2L).movieType(ACTION).user(user)
+                        .comments(List.of())
+                        .build()));
         given(boardRepository.save(any())).willReturn(updateBoard);
-        UpdateBoardRequest updateBoardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ACTION);
-        UpdateBoardResponse expectedBoardResponse = new UpdateBoardResponse(
-                new BoardPayload(boardId, "새로운 제목", "새로운 내용", 1L, 2L,
-                        ACTION, 1L, List.of(new CommentPayload(
-                        1L, "새로운 제목", "새로운 내용", boardId, 1L
-                ))));
 
         // when
-        UpdateBoardResponse updateBoardResponse = boardService.update(boardId, updateBoardRequest);
+        UpdateBoardResponse updateBoardResponse = boardService.update(boardId, UpdateBoardRequest.builder()
+                .title("새로운 제목").content("새로운 내용")
+                .movieType(ACTION).userId(1L).build());
 
         // then
         assertThat(updateBoardResponse).usingRecursiveComparison().isEqualTo(expectedBoardResponse);
@@ -232,7 +237,7 @@ class BoardServiceTest {
 
         UserPayload userPayload = UserPayload.builder()
                 .id(1L).username("최성욱").email("asd@naver.com")
-                .password("1234").birth("950928").phoneNumber("010-1234-1234").board(List.of())
+                .password("1234").birth("950928").phoneNumber("010-1234-1234").boardPayloads(List.of())
                 .build();
         given(userService.findById(any())).willReturn(userPayload);
 
@@ -288,14 +293,16 @@ class BoardServiceTest {
                 .build();
         given(boardRepository.save(any())).willReturn(board);
 
-        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest("추천할게요.", 1L);
         UpdateCommentResponse expectedValue = UpdateCommentResponse.from(CommentPayload.from(
                 Comment.builder()
                         .id(commentId).content("추천할게요").username("최성욱").board(board).userId(1L)
                         .build()));
 
         // when
-        UpdateCommentResponse updateCommentResponse = boardService.updateComment(boardId, commentId, updateCommentRequest);
+        UpdateCommentResponse updateCommentResponse = boardService.updateComment(boardId, commentId,
+                UpdateCommentRequest.builder()
+                        .content("추천할게요").userId(1L)
+                        .build());
 
         // then
         assertThat(updateCommentResponse).usingRecursiveComparison().isEqualTo(expectedValue);

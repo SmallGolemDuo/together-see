@@ -128,8 +128,9 @@ class BoardControllerTest {
     @DisplayName("게시글 수정")
     void update() throws Exception {
         // given
+        Long userId = new Random().nextLong();
         Long boardId = 1L;
-        UpdateBoardRequest boardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ETC);
+        UpdateBoardRequest boardRequest = new UpdateBoardRequest("새로운 제목", "새로운 내용", ETC, userId);
         UpdateBoardResponse boardResponse = new UpdateBoardResponse(
                 new BoardPayload(
                         1L, "새로운 제목", "새로운 내용", 1L, 3L, ETC, 1L,List.of()));

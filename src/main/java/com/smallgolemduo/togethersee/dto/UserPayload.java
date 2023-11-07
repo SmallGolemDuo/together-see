@@ -21,7 +21,7 @@ public class UserPayload {
     private String password;
     private String birth;
     private String phoneNumber;
-    private List<BoardPayload> board;
+    private List<BoardPayload> boardPayloads;
 
     public User toEntity() {
         return User.builder()
@@ -42,7 +42,7 @@ public class UserPayload {
                 .password(user.getPassword())
                 .birth(user.getBirth())
                 .phoneNumber(user.getPhoneNumber())
-                .board(user.getBoards().stream()
+                .boardPayloads(user.getBoards().stream()
                         .map(BoardPayload::from)
                         .collect(Collectors.toList()))
                 .build();
