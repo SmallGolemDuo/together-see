@@ -1,6 +1,5 @@
 package com.smallgolemduo.togethersee.entity;
 
-import com.smallgolemduo.togethersee.dto.request.UpdateCommentRequest;
 import com.smallgolemduo.togethersee.entity.enums.MovieType;
 import lombok.*;
 
@@ -60,10 +59,14 @@ public class Board {
                 .orElse(null);
     }
 
-    public boolean isUserIdByComments(UpdateCommentRequest updateCommentRequest){
-          return this.comments.stream()
-                .anyMatch(comment -> comment.getUserId()
-                        .equals(updateCommentRequest.getUserId()));
+    public boolean isUserIdByComments(Long userId) {
+        return this.comments.stream()
+                .noneMatch(comment -> comment.getUserId()
+                        .equals(userId));
+    }
+
+    public void deleteComment(Long commentId) {
+        this.comments.removeIf(c -> c.getId().equals(commentId));
     }
 
 }

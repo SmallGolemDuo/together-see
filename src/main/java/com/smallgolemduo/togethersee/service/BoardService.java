@@ -95,7 +95,7 @@ public class BoardService {
         if (comment == null) {
             throw new IllegalArgumentException("작성된 댓글이 없습니다.");
         }
-        if (!board.isUserIdByComments(updateCommentRequest)) {
+        if (board.isUserIdByComments(updateCommentRequest.getUserId())) {
             throw new IllegalArgumentException("댓글 수정에 대한 권한이 없습니다.");
         }
         if (updateCommentRequest.getContent() != null) {
@@ -110,12 +110,14 @@ public class BoardService {
     public boolean deleteComment(Long boardId, Long commentId, DeleteCommentRequest deleteCommentRequest) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("작성된 게시물이 없습니다."));
-        boolean isComment = board.getComments().stream()
-                .anyMatch(c -> c.getId().equals(commentId) && c.getUserId().equals(deleteCommentRequest.getUserId()));
-        if (!isComment) {
-            throw new IllegalArgumentException("해당하는 댓글이 없거나 댓글을 작성한 사용자가 아닙니다.");
+        Comment comment = board.findCommentId(commentId);
+        if (comment == null) {
+            throw new IllegalArgumentException("작성된 댓글이 없습니다.");
         }
-        board.getComments().removeIf(c -> c.getId().equals(commentId));
+        if (board.isUserIdByComments(deleteCommentRequest.getUserId())) {
+            throw new IllegalArgumentException("댓글 삭제에 대한 권한이 없습니다.");
+        }
+        board.deleteComment(commentId);
         boardRepository.save(board);
         return true;
     }
