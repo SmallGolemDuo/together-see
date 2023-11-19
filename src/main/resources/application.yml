@@ -21,3 +21,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+kakao:
+  api:
+    endpoint: "https://kauth.kakao.com"
+    client-id: "16193d7b26557863922f0139722f8829"
+    redirect-url: "http://localhost:8080/oauth/redirect"

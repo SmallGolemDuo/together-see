@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TogetherSeeApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(TogetherSeeApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(TogetherSeeApplication.class, args);
+    }
 
 }
