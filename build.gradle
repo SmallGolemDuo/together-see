@@ -8,7 +8,7 @@ group = 'com.smallgolemduo'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '11'
+    sourceCompatibility = '17'
 }
 
 configurations {
@@ -30,6 +30,13 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:7.0.2.Final'
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.github.openfeign:feign-slf4j:11.6'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
